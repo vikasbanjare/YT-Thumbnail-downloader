@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Thumbnail Downloader</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="tool">
+        <div class="intro">
+          <p class="eyebrow">One-click ZIP export</p>
+          <h1>YouTube channel and playlist thumbnails, grabbed in the best quality available.</h1>
+          <p>
+            Paste a channel videos page, playlist link, playlist ID, or a few video links. Preview the detected videos, then download every thumbnail as a ZIP.
+          </p>
+        </div>
+
+        <form class="search" id="thumbnailForm">
+          <label for="playlistUrl">YouTube URL</label>
+          <div class="inputRow">
+            <input
+              id="playlistUrl"
+              name="playlistUrl"
+              type="text"
+              placeholder="https://www.youtube.com/@channel/videos"
+              autocomplete="off"
+              required
+            />
+            <button type="submit">Find thumbnails</button>
+          </div>
+        </form>
+
+        <div class="actions">
+          <button id="downloadButton" type="button" disabled>Download ZIP</button>
+          <span id="status" role="status">Paste a link to begin.</span>
+        </div>
+      </section>
+
+      <section class="results" aria-live="polite">
+        <div class="resultsHeader">
+          <h2>Detected videos</h2>
+          <span id="count">0</span>
+        </div>
+        <div id="grid" class="grid empty">
+          <p>No thumbnails loaded yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
