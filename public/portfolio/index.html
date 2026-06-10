@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vikas Banjare — Visual Designer & Art Director</title>
+  <meta name="description" content="Vikas Banjare is a visual designer crafting bold brand identities, posters and digital experiences." />
+  <meta property="og:title" content="Vikas Banjare — Visual Designer" />
+  <meta property="og:description" content="Bold brand identities, posters and digital experiences." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230A0A0A'/><text x='16' y='22' font-family='Arial Black' font-size='14' fill='%23D6FF3F' text-anchor='middle'>VB</text></svg>" />
+</head>
+<body>
+
+  <!-- ============ PRELOADER ============ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-name">
+      <span class="preloader-word">VIKAS</span>
+      <span class="preloader-word serif">Banjare</span>
+    </div>
+    <div class="preloader-count" id="preloader-count">0</div>
+  </div>
+
+  <!-- ============ CUSTOM CURSOR ============ -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"><span id="cursor-label"></span></div>
+
+  <!-- ============ GRAIN ============ -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <a class="logo" href="#top" data-cursor="hover">VB<sup>©</sup></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#work" data-cursor="hover"><span data-nav-index="01">Work</span></a>
+      <a href="#about" data-cursor="hover"><span data-nav-index="02">About</span></a>
+      <a href="#services" data-cursor="hover"><span data-nav-index="03">Services</span></a>
+      <a href="#contact" data-cursor="hover"><span data-nav-index="04">Contact</span></a>
+    </nav>
+    <div class="header-meta">
+      <span class="avail-dot" aria-hidden="true"></span>
+      <span id="header-availability">Open for work</span>
+      <span class="header-time" id="local-time">--:--</span>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <p class="hero-greeting" id="hero-greeting" hidden></p>
+      <p class="hero-eyebrow reveal-line"><span id="hero-tagline">Visual Designer &amp; Art Director</span> — <span id="hero-location">India</span></p>
+
+      <h1 class="hero-title" aria-label="Vikas Banjare">
+        <span class="hero-line"><span class="hero-line-inner" id="hero-first">VIKAS</span></span>
+        <span class="hero-line hero-line-indent">
+          <span class="hero-line-inner serif-display" id="hero-last">Banjare</span>
+        </span>
+      </h1>
+
+      <div class="hero-bottom">
+        <p class="hero-desc reveal-line">Designing <em class="serif">bold</em> ideas into<br/>work that gets <em class="serif">remembered.</em></p>
+        <div class="hero-roles" aria-hidden="true">
+          <div class="hero-roles-track" id="hero-roles-track"></div>
+        </div>
+        <a class="hero-scroll" href="#work" data-cursor="hover" aria-label="Scroll to work">
+          <span class="hero-scroll-circle">↓</span>
+          <span>SCROLL</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+
+    <!-- ============ WORK ============ -->
+    <section class="work" id="work">
+      <div class="section-head">
+        <h2 class="section-title"><span class="section-num">01</span> SELECTED <em class="serif">Work</em></h2>
+        <p class="section-side">2023 — 2026<br/><span id="work-count"></span> projects</p>
+      </div>
+
+      <ul class="work-list" id="work-list"></ul>
+
+      <div class="work-preview" id="work-preview" aria-hidden="true">
+        <div class="work-preview-inner" id="work-preview-inner"></div>
+      </div>
+
+      <a class="work-all magnetic" id="behance-cta" href="#" target="_blank" rel="noopener" data-cursor="hover">
+        SEE EVERYTHING ON BEHANCE <span class="arr">↗</span>
+      </a>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about" id="about">
+      <div class="section-head">
+        <h2 class="section-title"><span class="section-num">02</span> ABOUT <em class="serif">Me</em></h2>
+      </div>
+
+      <div class="about-grid">
+        <figure class="about-photo-wrap">
+          <div class="about-photo" id="about-photo" role="img" aria-label="Portrait of Vikas Banjare">
+            <span class="about-photo-hint" id="about-photo-hint">YOUR PHOTO<br/>— add in data.js</span>
+          </div>
+          <figcaption class="about-photo-caption">Vikas Banjare — <span id="about-location">India</span></figcaption>
+        </figure>
+
+        <div class="about-copy">
+          <p class="about-text" id="about-text"></p>
+          <div class="about-stats" id="about-stats"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="services" id="services">
+      <div class="section-head">
+        <h2 class="section-title"><span class="section-num">03</span> WHAT I <em class="serif">Do</em></h2>
+      </div>
+      <div class="services-list" id="services-list"></div>
+    </section>
+
+    <!-- ============ CONTACT / FOOTER ============ -->
+    <footer class="footer" id="contact">
+      <p class="footer-eyebrow" id="footer-greeting">GOT A PROJECT IN MIND?</p>
+      <h2 class="footer-title">
+        <span class="footer-line">LET'S WORK</span>
+        <span class="footer-line"><em class="serif">Together</em></span>
+      </h2>
+
+      <a class="footer-cta magnetic" id="footer-email" href="#" data-cursor="hover">
+        <span id="footer-email-text"></span>
+        <span class="arr">↗</span>
+      </a>
+
+      <div class="footer-meta">
+        <div class="footer-col">
+          <span class="footer-label">SOCIALS</span>
+          <a id="link-behance" href="#" target="_blank" rel="noopener" data-cursor="hover">Behance ↗</a>
+          <a id="link-linkedin" href="#" target="_blank" rel="noopener" data-cursor="hover">LinkedIn ↗</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-label">LOCATION</span>
+          <span id="footer-location">India</span>
+          <span id="footer-time">--:--</span>
+        </div>
+        <div class="footer-col">
+          <span class="footer-label">VERSION</span>
+          <span>© <span id="footer-year"></span> Vikas Banjare</span>
+          <a href="#top" data-cursor="hover" id="back-to-top">Back to top ↑</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ============ CASE VIEW (project overlay) ============ -->
+  <div class="case" id="case" hidden>
+    <div class="case-bar">
+      <span class="case-index" id="case-index"></span>
+      <button class="case-close" id="case-close" data-cursor="hover" aria-label="Close project">CLOSE ✕</button>
+    </div>
+    <div class="case-scroll" id="case-scroll">
+      <h3 class="case-title" id="case-title"></h3>
+      <p class="case-meta" id="case-meta"></p>
+      <p class="case-desc" id="case-desc"></p>
+      <div class="case-media" id="case-media"></div>
+      <a class="case-link magnetic" id="case-link" href="#" target="_blank" rel="noopener" data-cursor="hover">VIEW ON BEHANCE ↗</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -44,7 +44,7 @@ async function handleDownload(request, response) {
 
 async function serveStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
+  const pathname = url.pathname.endsWith("/") ? url.pathname + "index.html" : url.pathname;
   const safePath = normalize(pathname).replace(/^(\.\.[/\\])+/, "");
   const filePath = join(publicDir, safePath);
   const file = await readFile(filePath);
