@@ -7,10 +7,9 @@
    shows the full live project (all its images & videos) via Behance's
    official embed.
 
-   COVERS: some cards use temporary AI-generated stand-in covers (marked
-   [AI]) and the rest use bold typographic covers. To use a REAL cover:
-   open the project on Behance → right-click its cover image → "Copy image
-   address" → paste into `cover`.
+   COVERS: cards use bold typographic covers until you paste each
+   project's REAL cover image: open the project on Behance → right-click
+   its cover image → "Copy image address" → paste into `cover`.
 
    PHOTO: drop "me.jpg" into this folder and set photo: "me.jpg"
    ========================================================================== */
@@ -56,7 +55,7 @@ window.PORTFOLIO = {
       category: "UI / UX",
       year: "2026",
       description: "Conversion-focused website design — user flows, wireframes and pixel-perfect visual design built for real business goals.",
-      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060538_ef9195dd-f90d-4eb0-a229-9e287ea6abe1_min.webp", // [AI] stand-in — replace with real cover
+      cover: "",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250550681",
@@ -67,7 +66,7 @@ window.PORTFOLIO = {
       category: "Graphic Design",
       year: "2026",
       description: "A collection of bold graphic explorations — key visuals, campaign creatives and design experiments.",
-      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060401_b008b043-1072-426c-9bfd-8f2a2f32214c_min.webp", // [AI] stand-in — replace with real cover
+      cover: "",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250526649",
@@ -100,7 +99,7 @@ window.PORTFOLIO = {
       category: "YouTube · AI",
       year: "2025",
       description: "Click-worthy YouTube thumbnails crafted with AI tools — built on 7 years of YouTube growth instincts.",
-      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060536_8690ea62-7a39-4061-aa60-f71a4e19866e_min.webp", // [AI] stand-in — replace with real cover
+      cover: "",
       images: [],
       videoEmbed: "",
       behanceProjectId: "232938571",
@@ -133,7 +132,7 @@ window.PORTFOLIO = {
       category: "Social Media",
       year: "2024",
       description: "Daily and campaign-based social creatives across Instagram, LinkedIn and more — cohesive, on-brand, scroll-stopping.",
-      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060540_63d75952-6702-4beb-94e6-c5874631463d_min.webp", // [AI] stand-in — replace with real cover
+      cover: "",
       images: [],
       videoEmbed: "",
       behanceProjectId: "218001529",
@@ -166,7 +165,7 @@ window.PORTFOLIO = {
       category: "Motion Design",
       year: "2024",
       description: "Motion graphics that bring static brands to life — After Effects experiments and client work.",
-      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060542_c6c91705-2d13-4fa9-a73d-00e9617e249a_min.webp", // [AI] stand-in — replace with real cover
+      cover: "",
       images: [],
       videoEmbed: "",
       behanceProjectId: "218106207",
