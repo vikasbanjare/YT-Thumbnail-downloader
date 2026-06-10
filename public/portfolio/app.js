@@ -549,13 +549,13 @@
   if (flyScene && !reducedMotion) {
     // your editing stack, floating in zero gravity
     const TOOLS = [
-      { l: "Pr", fg: "#9999ff", bg: "#00005b", x: 78, y: 16, z: 120, s: 64 },
-      { l: "Ae", fg: "#9999ff", bg: "#00005b", x: 64, y: 56, z: -90, s: 46 },
-      { l: "Ps", fg: "#31a8ff", bg: "#001e36", x: 88, y: 46, z: 40, s: 56 },
-      { l: "Ai", fg: "#ff9a00", bg: "#330000", x: 8,  y: 52, z: 150, s: 58 },
-      { l: "Lr", fg: "#31a8ff", bg: "#001e36", x: 30, y: 12, z: -140, s: 40 },
-      { l: "Id", fg: "#ff3366", bg: "#49021f", x: 47, y: 22, z: 60, s: 44 },
-      { l: "Fg", fg: "#0acf83", bg: "#1e1e1e", x: 16, y: 28, z: -40, s: 42 },
+      { l: "Pr", fg: "#9999ff", bg: "#00005b", x: 74, y: 12, z: 160, s: 104 },
+      { l: "Ae", fg: "#9999ff", bg: "#00005b", x: 60, y: 60, z: -110, s: 72 },
+      { l: "Ps", fg: "#31a8ff", bg: "#001e36", x: 86, y: 40, z: 60, s: 92 },
+      { l: "Ai", fg: "#ff9a00", bg: "#330000", x: 5,  y: 48, z: 190, s: 96 },
+      { l: "Lr", fg: "#31a8ff", bg: "#001e36", x: 28, y: 8,  z: -160, s: 60 },
+      { l: "Id", fg: "#ff3366", bg: "#49021f", x: 44, y: 18, z: 90, s: 70 },
+      { l: "Fg", fg: "#0acf83", bg: "#1e1e1e", x: 14, y: 24, z: -60, s: 64 },
     ];
     const icons = TOOLS.map((t, i) => {
       const el = document.createElement("div");
@@ -587,11 +587,11 @@
     (function flyLoop(now) {
       const t = now / 1000;
       // whole 3D scene tilts toward the cursor
-      flyScene.style.transform = `rotateX(${((fmy - 0.5) * -10).toFixed(2)}deg) rotateY(${((fmx - 0.5) * 14).toFixed(2)}deg)`;
+      flyScene.style.transform = `rotateX(${((fmy - 0.5) * -16).toFixed(2)}deg) rotateY(${((fmx - 0.5) * 22).toFixed(2)}deg)`;
       icons.forEach((ic) => {
         const { el, t: cfg, phase, spin } = ic;
-        const fx = Math.sin(t * 0.5 + phase) * 26;
-        const fy = Math.cos(t * 0.38 + phase * 1.3) * 20;
+        const fx = Math.sin(t * 0.42 + phase) * 110;
+        const fy = Math.cos(t * 0.31 + phase * 1.3) * 64;
         const rz = Math.sin(t * 0.3 + phase) * 12;
         const ry = Math.sin(t * 0.45 + phase) * (14 + Math.abs(spin));
         el.style.transform =
