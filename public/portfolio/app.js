@@ -140,6 +140,58 @@
   endCard.innerHTML = `<span>SEE EVERYTHING<br/>ON BEHANCE</span><span class="arr">→</span>`;
   htrack.appendChild(endCard);
 
+  /* ---------------- showreel (video stage) ---------------- */
+  const reelItems = DATA.showreel || [];
+  const reelList = $("#reel-list");
+  const reelStage = $("#reel-stage");
+  if (reelItems.length && reelStage) {
+    let current = 0, playing = false;
+
+    function reelEmbed(item) {
+      if (item.youtubeId) {
+        return `<div class="reel-frame yt"><iframe src="https://www.youtube.com/embed/${item.youtubeId}?autoplay=1&rel=0" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+      }
+      return `<div class="reel-frame be"><iframe src="https://www.behance.net/embed/project/${item.behanceProjectId}?ilo0=1" title="${item.title}" allowfullscreen allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe></div>`;
+    }
+    function renderPoster() {
+      reelStage.innerHTML =
+        `<div class="reel-poster" data-cursor="play">` +
+        `<span class="reel-play" aria-hidden="true">▶</span>` +
+        `<span class="reel-poster-title">${reelItems[current].title}</span>` +
+        `<span class="reel-poster-hint">CLICK TO PLAY</span>` +
+        `<span class="reel-scanlines" aria-hidden="true"></span></div>`;
+    }
+    function play() {
+      playing = true;
+      reelStage.innerHTML = reelEmbed(reelItems[current]);
+      reelList.classList.add("playing");
+    }
+    function select(i) {
+      current = i;
+      $("#reel-now-title").textContent = reelItems[i].title.toUpperCase();
+      $$(".reel-item", reelList).forEach((el, j) => el.classList.toggle("active", j === i));
+      if (playing) play();
+      else renderPoster();
+    }
+
+    reelItems.forEach((item, i) => {
+      const b = document.createElement("button");
+      b.className = "reel-item";
+      b.dataset.cursor = "play";
+      b.innerHTML =
+        `<span class="ri-num">${String(i + 1).padStart(2, "0")}</span>` +
+        `<span class="ri-title">${item.title}</span>` +
+        `<span class="ri-label">${item.label || ""}</span>` +
+        `<span class="ri-eq" aria-hidden="true"><i></i><i></i><i></i></span>`;
+      b.addEventListener("click", () => { select(i); if (!playing) play(); });
+      reelList.appendChild(b);
+    });
+    reelStage.addEventListener("click", (e) => {
+      if (e.target.closest(".reel-poster")) play();
+    });
+    select(0);
+  }
+
   /* ---------------- render: about ---------------- */
   const aboutText = $("#about-text");
   (P.about || "").split(/\s+/).forEach((word) => {
@@ -361,6 +413,7 @@
       if (!t) return;
       if (t.dataset.cursor === "view") { blob.classList.add("say"); blobLabel.textContent = "VIEW ↗"; }
       else if (t.dataset.cursor === "drag") { blob.classList.add("say"); blobLabel.textContent = "DRAG ME"; }
+      else if (t.dataset.cursor === "play") { blob.classList.add("say"); blobLabel.textContent = "PLAY ▶"; }
       else blob.classList.add("hover");
     });
   } else {

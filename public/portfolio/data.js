@@ -174,6 +174,21 @@ window.PORTFOLIO = {
     },
   ],
 
+  /* ------------------------------------------------------------------
+     SHOWREEL — the video section. Visitors click a title to load and
+     play it on the big stage. For each item use ONE of:
+       youtubeId:        "dQw4w9WgXcQ"  ← from youtube.com/watch?v=XXXX
+       behanceProjectId: "232522589"    ← plays that Behance project
+     YouTube plays fullscreen 16:9 and looks best — paste IDs when ready.
+     ------------------------------------------------------------------ */
+  showreel: [
+    { title: "Wealthy YT Ads Campaign", label: "Ad Films",   youtubeId: "", behanceProjectId: "232522589" },
+    { title: "Podcast Videos",          label: "Production", youtubeId: "", behanceProjectId: "218001379" },
+    { title: "Trailer Video",           label: "Edit",       youtubeId: "", behanceProjectId: "217989345" },
+    { title: "AI Videos",               label: "AI",         youtubeId: "", behanceProjectId: "232940741" },
+    { title: "Motion Graphic",          label: "Motion",     youtubeId: "", behanceProjectId: "218106207" },
+  ],
+
   // The flashlight TOOLBOX wall — your real stack (move the light to reveal)
   toolbox: [
     "Premiere Pro", "After Effects", "Photoshop", "Illustrator", "Lightroom",
