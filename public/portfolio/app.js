@@ -147,10 +147,11 @@
     aboutText.appendChild(s);
   });
   const aboutPhoto = $("#about-photo");
-  if (P.photo) {
-    aboutPhoto.style.backgroundImage = `url("${P.photo}")`;
-    $("#about-photo-hint").remove();
-  }
+  loadImg(P.photo, (url) => {
+    aboutPhoto.style.backgroundImage = `url("${url}")`;
+    const hint = $("#about-photo-hint");
+    if (hint) hint.remove();
+  });
   const statsWrap = $("#about-stats");
   (DATA.stats || []).forEach((st) => {
     const d = document.createElement("div");

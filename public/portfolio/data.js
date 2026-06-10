@@ -7,11 +7,12 @@
    shows the full live project (all its images & videos) via Behance's
    official embed.
 
-   COVERS: cards use bold typographic covers until you paste each
-   project's REAL cover image: open the project on Behance → right-click
-   its cover image → "Copy image address" → paste into `cover`.
+   COVERS: each card is pre-wired to an image filename (cover-*.jpg).
+   Upload images with those exact names next to index.html and they
+   appear automatically. Missing images simply fall back to the bold
+   typographic covers — nothing breaks.
 
-   PHOTO: drop "me.jpg" into this folder and set photo: "me.jpg"
+   PHOTO: pre-wired to "me.jpg" — upload your photo with that name.
    ========================================================================== */
 
 window.PORTFOLIO = {
@@ -25,7 +26,7 @@ window.PORTFOLIO = {
     email: "vikas.banjare@gmail.com",
     behance: "https://www.behance.net/vikas-banjare",
     linkedin: "https://www.linkedin.com/in/vikasbanjare/",
-    photo: "",
+    photo: "me.jpg",
     // Words wrapped in *asterisks* render as accent italic serif.
     about:
       "I'm Vikas — designer, editor and *storyteller* with 7 years across video, design and digital content. Today I lead the design studio at Mirae Asset; before that I scaled creative at Wealthy and Unacademy — 2000+ videos, 100+ YouTube channels and *1M+* subscribers gained in a single month. I make work that moves, converts and gets *remembered*.",
@@ -55,7 +56,7 @@ window.PORTFOLIO = {
       category: "UI / UX",
       year: "2026",
       description: "Conversion-focused website design — user flows, wireframes and pixel-perfect visual design built for real business goals.",
-      cover: "",
+      cover: "cover-website.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250550681",
@@ -66,7 +67,7 @@ window.PORTFOLIO = {
       category: "Graphic Design",
       year: "2026",
       description: "A collection of bold graphic explorations — key visuals, campaign creatives and design experiments.",
-      cover: "",
+      cover: "cover-creative.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250526649",
@@ -77,7 +78,7 @@ window.PORTFOLIO = {
       category: "AI × Web",
       year: "2026",
       description: "A website concept designed and built with AI-assisted workflows — from ideation to polished interface.",
-      cover: "",
+      cover: "cover-ai-website.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250495271",
@@ -88,7 +89,7 @@ window.PORTFOLIO = {
       category: "Email Marketing",
       year: "2026",
       description: "Email newsletters with strong visual hierarchy — designed to be opened, read and clicked.",
-      cover: "",
+      cover: "cover-emailer.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "250525969",
@@ -99,7 +100,7 @@ window.PORTFOLIO = {
       category: "YouTube · AI",
       year: "2025",
       description: "Click-worthy YouTube thumbnails crafted with AI tools — built on 7 years of YouTube growth instincts.",
-      cover: "",
+      cover: "cover-thumbnails.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "232938571",
@@ -110,7 +111,7 @@ window.PORTFOLIO = {
       category: "AI Video",
       year: "2025",
       description: "Video generation and editing experiments with Runway, HeyGen and friends — scaling creative output with AI.",
-      cover: "",
+      cover: "cover-ai-videos.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "232940741",
@@ -121,7 +122,7 @@ window.PORTFOLIO = {
       category: "Ad Campaign",
       year: "2025",
       description: "Performance marketing video campaign for Wealthy — hooks, CTAs and edits optimized for YouTube ads.",
-      cover: "",
+      cover: "cover-wealthy.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "232522589",
@@ -132,7 +133,7 @@ window.PORTFOLIO = {
       category: "Social Media",
       year: "2024",
       description: "Daily and campaign-based social creatives across Instagram, LinkedIn and more — cohesive, on-brand, scroll-stopping.",
-      cover: "",
+      cover: "cover-social.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "218001529",
@@ -143,7 +144,7 @@ window.PORTFOLIO = {
       category: "Video Production",
       year: "2024",
       description: "Podcast production from concept to execution — shooting, editing and short-form clips for social.",
-      cover: "",
+      cover: "cover-podcast.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "218001379",
@@ -154,7 +155,7 @@ window.PORTFOLIO = {
       category: "Video · Edit",
       year: "2024",
       description: "High-energy trailer edit — pacing, sound design and story compressed into seconds.",
-      cover: "",
+      cover: "cover-trailer.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "217989345",
@@ -165,7 +166,7 @@ window.PORTFOLIO = {
       category: "Motion Design",
       year: "2024",
       description: "Motion graphics that bring static brands to life — After Effects experiments and client work.",
-      cover: "",
+      cover: "cover-motion.jpg",
       images: [],
       videoEmbed: "",
       behanceProjectId: "218106207",
