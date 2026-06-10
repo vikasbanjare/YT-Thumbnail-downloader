@@ -95,11 +95,20 @@
   // covers load with a graceful fallback: cards start as bold gradient
   // placeholders and upgrade to the image only once it actually loads
   const loadedCovers = [];
-  function loadImg(url, ok) {
-    if (!url) return;
-    const im = new Image();
-    im.onload = () => ok(url);
-    im.src = url;
+  // Accepts a full URL/filename, or an extensionless base name — in which
+  // case every common extension is tried until one loads.
+  function loadImg(src, ok) {
+    if (!src) return;
+    const candidates = src.includes(".")
+      ? [src]
+      : [src + ".png", src + ".jpg", src + ".jpeg", src + ".webp", src + ".jpg.png", src + ".PNG", src + ".JPG"];
+    (function next(i) {
+      if (i >= candidates.length) return;
+      const im = new Image();
+      im.onload = () => ok(candidates[i]);
+      im.onerror = () => next(i + 1);
+      im.src = candidates[i];
+    })(0);
   }
 
   const projects = DATA.projects || [];
