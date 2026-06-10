@@ -9,140 +9,162 @@
   <meta property="og:description" content="Bold brand identities, posters and digital experiences." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230A0A0A'/><text x='16' y='22' font-family='Arial Black' font-size='14' fill='%23D6FF3F' text-anchor='middle'>VB</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23141414'/><text x='16' y='22' font-family='Arial Black' font-size='13' fill='%23D9FF3D' text-anchor='middle'>VB</text></svg>" />
 </head>
 <body>
 
   <!-- ============ PRELOADER ============ -->
   <div class="preloader" id="preloader">
-    <div class="preloader-name">
-      <span class="preloader-word">VIKAS</span>
-      <span class="preloader-word serif">Banjare</span>
-    </div>
-    <div class="preloader-count" id="preloader-count">0</div>
+    <div class="preloader-word" id="preloader-word">HELLO</div>
+    <div class="preloader-count"><span id="preloader-count">0</span>%</div>
   </div>
 
-  <!-- ============ CUSTOM CURSOR ============ -->
-  <div class="cursor-dot" id="cursor-dot"></div>
-  <div class="cursor-ring" id="cursor-ring"><span id="cursor-label"></span></div>
-
-  <!-- ============ GRAIN ============ -->
-  <div class="grain" aria-hidden="true"></div>
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor-blob" id="cursor-blob"><span id="cursor-label"></span></div>
 
   <!-- ============ HEADER ============ -->
   <header class="site-header">
-    <a class="logo" href="#top" data-cursor="hover">VB<sup>©</sup></a>
+    <a class="logo" href="#top" data-cursor="hover">VIKAS<span>©</span></a>
     <nav class="site-nav" aria-label="Main">
-      <a href="#work" data-cursor="hover"><span data-nav-index="01">Work</span></a>
-      <a href="#about" data-cursor="hover"><span data-nav-index="02">About</span></a>
-      <a href="#services" data-cursor="hover"><span data-nav-index="03">Services</span></a>
-      <a href="#contact" data-cursor="hover"><span data-nav-index="04">Contact</span></a>
+      <a href="#work" data-cursor="hover">WORK</a>
+      <a href="#about" data-cursor="hover">ABOUT</a>
+      <a href="#services" data-cursor="hover">SERVICES</a>
     </nav>
-    <div class="header-meta">
-      <span class="avail-dot" aria-hidden="true"></span>
-      <span id="header-availability">Open for work</span>
-      <span class="header-time" id="local-time">--:--</span>
-    </div>
+    <a class="header-cta" href="#contact" data-cursor="hover">LET'S TALK <span class="dot-live"></span></a>
   </header>
 
   <main id="top">
 
     <!-- ============ HERO ============ -->
     <section class="hero" id="hero">
+      <div class="trail-zone" id="trail-zone" aria-hidden="true"></div>
+
       <p class="hero-greeting" id="hero-greeting" hidden></p>
-      <p class="hero-eyebrow reveal-line"><span id="hero-tagline">Visual Designer &amp; Art Director</span> — <span id="hero-location">India</span></p>
+
+      <div class="hero-chips" aria-hidden="true">
+        <span class="chip chip-tilt-l">★ <span id="chip-tagline">VISUAL DESIGNER</span></span>
+        <span class="chip chip-ink chip-tilt-r"><span id="chip-location">INDIA</span> · <span id="chip-time">--:--</span></span>
+        <span class="chip chip-lime chip-tilt-l2">PORTFOLIO <span id="chip-year"></span></span>
+      </div>
 
       <h1 class="hero-title" aria-label="Vikas Banjare">
-        <span class="hero-line"><span class="hero-line-inner" id="hero-first">VIKAS</span></span>
-        <span class="hero-line hero-line-indent">
-          <span class="hero-line-inner serif-display" id="hero-last">Banjare</span>
+        <span class="hero-row"><span class="kinetic" id="hero-first">VIKAS</span></span>
+        <span class="hero-row hero-row-2">
+          <span class="hero-last serif-outline" id="hero-last">Banjare</span>
+          <span class="hero-face" aria-hidden="true">
+            <svg viewBox="0 0 100 100" class="face-svg">
+              <circle cx="50" cy="50" r="46" class="face-bg"/>
+              <g class="eye-group">
+                <circle cx="34" cy="42" r="11" fill="#fff"/>
+                <circle class="pupil" cx="34" cy="42" r="5" fill="#141414"/>
+              </g>
+              <g class="eye-group">
+                <circle cx="66" cy="42" r="11" fill="#fff"/>
+                <circle class="pupil" cx="66" cy="42" r="5" fill="#141414"/>
+              </g>
+              <path d="M32 65 Q50 80 68 65" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </span>
         </span>
       </h1>
 
       <div class="hero-bottom">
-        <p class="hero-desc reveal-line">Designing <em class="serif">bold</em> ideas into<br/>work that gets <em class="serif">remembered.</em></p>
-        <div class="hero-roles" aria-hidden="true">
-          <div class="hero-roles-track" id="hero-roles-track"></div>
-        </div>
-        <a class="hero-scroll" href="#work" data-cursor="hover" aria-label="Scroll to work">
-          <span class="hero-scroll-circle">↓</span>
-          <span>SCROLL</span>
+        <p class="hero-desc">I design <em class="serif">bold</em> ideas into work<br/>that gets <em class="serif">remembered.</em></p>
+        <div class="hero-roles" aria-hidden="true"><div class="hero-roles-track" id="hero-roles-track"></div></div>
+        <a class="badge-spin" href="#work" data-cursor="hover" aria-label="Scroll to work">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="circ" d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"/></defs>
+            <text class="badge-text"><textPath href="#circ">SCROLL FOR MAGIC ✦ OPEN FOR WORK ✦ </textPath></text>
+          </svg>
+          <span class="badge-arrow">↓</span>
         </a>
       </div>
+
+      <p class="hero-hint" aria-hidden="true">( move your mouse — psst, try the konami code )</p>
     </section>
 
-    <!-- ============ MARQUEE ============ -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="marquee-track"></div>
-    </div>
+    <!-- ============ MARQUEE 1 ============ -->
+    <div class="marquee marquee-lime" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
 
-    <!-- ============ WORK ============ -->
+    <!-- ============ WORK (pinned horizontal gallery) ============ -->
     <section class="work" id="work">
-      <div class="section-head">
-        <h2 class="section-title"><span class="section-num">01</span> SELECTED <em class="serif">Work</em></h2>
-        <p class="section-side">2023 — 2026<br/><span id="work-count"></span> projects</p>
+      <div class="work-pin" id="work-pin">
+        <div class="work-head">
+          <h2 class="mega">SELECTED <em class="serif">Work</em><sup>(<span id="work-count">6</span>)</sup></h2>
+          <p class="work-side">DRAG / SCROLL →</p>
+        </div>
+        <div class="htrack-wrap" id="htrack-wrap">
+          <div class="htrack" id="htrack"></div>
+        </div>
       </div>
-
-      <ul class="work-list" id="work-list"></ul>
-
-      <div class="work-preview" id="work-preview" aria-hidden="true">
-        <div class="work-preview-inner" id="work-preview-inner"></div>
-      </div>
-
-      <a class="work-all magnetic" id="behance-cta" href="#" target="_blank" rel="noopener" data-cursor="hover">
-        SEE EVERYTHING ON BEHANCE <span class="arr">↗</span>
-      </a>
     </section>
 
     <!-- ============ ABOUT ============ -->
     <section class="about" id="about">
-      <div class="section-head">
-        <h2 class="section-title"><span class="section-num">02</span> ABOUT <em class="serif">Me</em></h2>
+      <div class="about-head">
+        <h2 class="mega">ABOUT <em class="serif">Me</em></h2>
+        <span class="chip chip-ink chip-tilt-r">NICE TO MEET YOU</span>
       </div>
 
       <div class="about-grid">
-        <figure class="about-photo-wrap">
-          <div class="about-photo" id="about-photo" role="img" aria-label="Portrait of Vikas Banjare">
-            <span class="about-photo-hint" id="about-photo-hint">YOUR PHOTO<br/>— add in data.js</span>
-          </div>
-          <figcaption class="about-photo-caption">Vikas Banjare — <span id="about-location">India</span></figcaption>
-        </figure>
+        <div class="polaroid-zone">
+          <figure class="polaroid" id="polaroid" data-cursor="drag">
+            <div class="polaroid-img" id="about-photo" role="img" aria-label="Portrait of Vikas Banjare">
+              <span class="polaroid-hint" id="about-photo-hint">YOUR PHOTO<br/>add in data.js</span>
+            </div>
+            <figcaption>that's me ✌</figcaption>
+            <span class="polaroid-tape" aria-hidden="true"></span>
+          </figure>
+          <p class="polaroid-note" aria-hidden="true">(you can drag me)</p>
+        </div>
 
         <div class="about-copy">
-          <p class="about-text" id="about-text"></p>
+          <p class="manifesto" id="about-text"></p>
           <div class="about-stats" id="about-stats"></div>
         </div>
       </div>
     </section>
 
+    <!-- ============ MARQUEE 2 ============ -->
+    <div class="marquee marquee-red" aria-hidden="true"><div class="marquee-track" id="marquee-track-2"></div></div>
+
     <!-- ============ SERVICES ============ -->
     <section class="services" id="services">
-      <div class="section-head">
-        <h2 class="section-title"><span class="section-num">03</span> WHAT I <em class="serif">Do</em></h2>
+      <div class="services-head">
+        <h2 class="mega">WHAT I <em class="serif">Do</em></h2>
+        <span class="chip chip-tilt-l">PICK YOUR POWER-UP ↓</span>
       </div>
       <div class="services-list" id="services-list"></div>
     </section>
 
-    <!-- ============ CONTACT / FOOTER ============ -->
+    <!-- ============ FOOTER ============ -->
     <footer class="footer" id="contact">
       <p class="footer-eyebrow" id="footer-greeting">GOT A PROJECT IN MIND?</p>
       <h2 class="footer-title">
-        <span class="footer-line">LET'S WORK</span>
-        <span class="footer-line"><em class="serif">Together</em></span>
+        <span class="footer-row">LET'S
+          <span class="footer-face" aria-hidden="true">
+            <svg viewBox="0 0 100 100" class="face-svg">
+              <circle cx="50" cy="50" r="46" class="face-bg-lime"/>
+              <g><circle cx="34" cy="42" r="11" fill="#141414"/><circle class="pupil" cx="34" cy="42" r="5" fill="#D9FF3D"/></g>
+              <g><circle cx="66" cy="42" r="11" fill="#141414"/><circle class="pupil" cx="66" cy="42" r="5" fill="#D9FF3D"/></g>
+              <path d="M32 63 Q50 80 68 63" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </span>
+        <span class="footer-row serif-outline-lime">Talk</span>
       </h2>
 
       <a class="footer-cta magnetic" id="footer-email" href="#" data-cursor="hover">
-        <span id="footer-email-text"></span>
-        <span class="arr">↗</span>
+        <span id="footer-email-text"></span> <span class="arr">↗</span>
       </a>
 
       <div class="footer-meta">
         <div class="footer-col">
           <span class="footer-label">SOCIALS</span>
-          <a id="link-behance" href="#" target="_blank" rel="noopener" data-cursor="hover">Behance ↗</a>
-          <a id="link-linkedin" href="#" target="_blank" rel="noopener" data-cursor="hover">LinkedIn ↗</a>
+          <a id="link-behance" href="#" target="_blank" rel="noopener" data-cursor="hover">BEHANCE ↗</a>
+          <a id="link-linkedin" href="#" target="_blank" rel="noopener" data-cursor="hover">LINKEDIN ↗</a>
         </div>
         <div class="footer-col">
           <span class="footer-label">LOCATION</span>
@@ -150,15 +172,15 @@
           <span id="footer-time">--:--</span>
         </div>
         <div class="footer-col">
-          <span class="footer-label">VERSION</span>
-          <span>© <span id="footer-year"></span> Vikas Banjare</span>
-          <a href="#top" data-cursor="hover" id="back-to-top">Back to top ↑</a>
+          <span class="footer-label">©<span id="footer-year"></span></span>
+          <span>Designed & built with chaos</span>
+          <a href="#top" data-cursor="hover">BACK TO TOP ↑</a>
         </div>
       </div>
     </footer>
   </main>
 
-  <!-- ============ CASE VIEW (project overlay) ============ -->
+  <!-- ============ CASE VIEW ============ -->
   <div class="case" id="case" hidden>
     <div class="case-bar">
       <span class="case-index" id="case-index"></span>
@@ -169,9 +191,11 @@
       <p class="case-meta" id="case-meta"></p>
       <p class="case-desc" id="case-desc"></p>
       <div class="case-media" id="case-media"></div>
-      <a class="case-link magnetic" id="case-link" href="#" target="_blank" rel="noopener" data-cursor="hover">VIEW ON BEHANCE ↗</a>
+      <a class="case-link" id="case-link" href="#" target="_blank" rel="noopener" data-cursor="hover">VIEW ON BEHANCE ↗</a>
     </div>
   </div>
+
+  <div id="toast" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
