@@ -135,6 +135,30 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 @keyframes drift1 { to { transform: translate(-14vw, 12vh) scale(1.25); } }
 @keyframes drift2 { to { transform: translate(12vw, -10vh) scale(0.85); } }
 
+/* ============ FLYING TOOL ICONS (3D space) ============ */
+.fly-zone {
+  position: absolute; inset: 0; z-index: 1;
+  perspective: 1100px; pointer-events: none;
+}
+.fly-scene { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.fly-icon {
+  position: absolute;
+  display: grid; place-items: center;
+  font-family: var(--body); font-weight: 700;
+  border-radius: 20%;
+  border: 2px solid rgba(10, 10, 10, 0.85);
+  box-shadow: 6px 9px 18px rgba(20, 20, 20, 0.22);
+  will-change: transform;
+  pointer-events: auto; cursor: pointer;
+  user-select: none;
+  transform-style: preserve-3d;
+}
+.fly-icon.kick { animation: iconkick 0.9s var(--ease); }
+@keyframes iconkick { 50% { scale: 1.35; } 100% { rotate: 720deg; } }
+@media (max-width: 860px) {
+  .fly-icon:nth-child(n+5) { display: none; }
+}
+
 /* hand-drawn doodles that draw themselves in */
 .doodles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .doodle { position: absolute; overflow: visible; }
