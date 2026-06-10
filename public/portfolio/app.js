@@ -149,6 +149,88 @@
   endCard.innerHTML = `<span>SEE EVERYTHING<br/>ON BEHANCE</span><span class="arr">→</span>`;
   htrack.appendChild(endCard);
 
+  /* ---------------- hero scroll story (character journey) ---------------- */
+  const story = DATA.story || [];
+  const storyStage = $("#story-stage");
+  if (story.length && storyStage) {
+    storyStage.innerHTML =
+      story.map(() => `<div class="story-scene"></div>`).join("") +
+      `<div class="story-caption" id="story-caption"></div>`;
+    const scenes = $$(".story-scene", storyStage);
+    const caption = $("#story-caption");
+
+    let curScene = -1;
+    function setScene(i) {
+      if (i === curScene) return;
+      curScene = i;
+      scenes.forEach((el, j) => el.classList.toggle("on", j === i));
+      scramble(caption, (story[i].caption || "").toUpperCase(), 420);
+    }
+
+    // the whole stage stays hidden until at least one scene file exists,
+    // so the site looks clean before the story media is uploaded
+    let armed = false;
+    function arm() {
+      if (armed) return;
+      armed = true;
+      storyStage.classList.add("live");
+      setScene(0);
+      if (hasST && !reducedMotion) {
+        ScrollTrigger.create({
+          trigger: "#hero",
+          start: "top top",
+          end: "+=200%",
+          pin: true,
+          scrub: true,
+          onUpdate(self) {
+            const n = story.length;
+            setScene(Math.min(n - 1, Math.floor(self.progress * n)));
+            // last scene: free-fall reacts to scroll speed & direction
+            if (curScene === n - 1) {
+              const v = gsap.utils.clamp(-1, 1, self.getVelocity() / 1600);
+              scenes[n - 1].style.transform =
+                `scale(1) rotate(${(v * 10).toFixed(1)}deg) translateY(${(v * 22).toFixed(1)}px)`;
+            }
+          },
+        });
+        ScrollTrigger.refresh();
+      } else {
+        setInterval(() => setScene((curScene + 1) % story.length), 2800);
+      }
+    }
+
+    // each scene accepts a video (.mp4/.webm) or an image (any extension)
+    story.forEach((s, i) => {
+      const base = s.media || s.image || "";
+      if (!base) return;
+      const vids = base.includes(".")
+        ? (/\.(mp4|webm)$/i.test(base) ? [base] : [])
+        : [base + ".mp4", base + ".webm"];
+      (function tryVideo(v) {
+        if (v >= vids.length) {
+          loadImg(base, (url) => { scenes[i].style.backgroundImage = `url('${url}')`; arm(); });
+          return;
+        }
+        fetch(vids[v], { method: "HEAD" })
+          .then((r) => {
+            if (r.ok) {
+              scenes[i].innerHTML = `<video src="${vids[v]}" autoplay muted loop playsinline></video>`;
+              arm();
+            } else tryVideo(v + 1);
+          })
+          .catch(() => tryVideo(v + 1));
+      })(0);
+    });
+
+    // the stage sways toward the cursor
+    if (fine && !reducedMotion) {
+      window.addEventListener("mousemove", (e) => {
+        const dx = e.clientX / window.innerWidth - 0.5;
+        storyStage.style.transform = `rotate(${(dx * 3).toFixed(2)}deg) translateX(${(dx * 16).toFixed(1)}px)`;
+      }, { passive: true });
+    }
+  }
+
   /* ---------------- showreel (video stage) ---------------- */
   const reelItems = DATA.showreel || [];
   const reelList = $("#reel-list");
@@ -460,6 +542,30 @@
     ["pointerup", "pointercancel"].forEach((ev) =>
       polaroid.addEventListener(ev, () => { dragging = false; })
     );
+  }
+
+  /* ---------------- aurora follow + doodle parallax ---------------- */
+  const auroraBlob = $("#aurora i");
+  const depthEls = $$(".doodle[data-depth], .hero-face");
+  if (fine && !reducedMotion && (auroraBlob || depthEls.length)) {
+    let amx = 0.5, amy = 0.5, ax = 0.5, ay = 0.5;
+    window.addEventListener("mousemove", (e) => {
+      amx = e.clientX / window.innerWidth;
+      amy = e.clientY / window.innerHeight;
+    }, { passive: true });
+    (function auroraLoop() {
+      ax += (amx - ax) * 0.045;
+      ay += (amy - ay) * 0.045;
+      if (auroraBlob) {
+        auroraBlob.style.transform =
+          `translate(${((ax - 0.5) * 40).toFixed(2)}vw, ${((ay - 0.5) * 34).toFixed(2)}vh) scale(${(1 + ax * 0.25).toFixed(3)})`;
+      }
+      depthEls.forEach((el) => {
+        const d = Number(el.dataset.depth || 2);
+        el.style.translate = `${((ax - 0.5) * d * 10).toFixed(1)}px ${((ay - 0.5) * d * 8).toFixed(1)}px`;
+      });
+      requestAnimationFrame(auroraLoop);
+    })();
   }
 
   /* ---------------- magnetic CTA ---------------- */

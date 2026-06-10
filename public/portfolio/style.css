@@ -126,6 +126,43 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
   padding: calc(var(--pad) * 2) var(--pad) var(--pad);
   overflow: hidden;
 }
+/* aurora gradient that drifts toward the cursor */
+.aurora { position: absolute; inset: -12%; z-index: 0; pointer-events: none; filter: blur(75px); opacity: 0.6; }
+.aurora i { position: absolute; width: 44vw; aspect-ratio: 1; border-radius: 50%; will-change: transform; }
+.aurora i:nth-child(1) { left: 8%; top: 12%; background: radial-gradient(circle, color-mix(in srgb, var(--lime) 70%, transparent), transparent 64%); }
+.aurora i:nth-child(2) { right: 4%; top: 30%; background: radial-gradient(circle, rgba(44, 57, 232, 0.32), transparent 64%); animation: drift1 17s ease-in-out infinite alternate; }
+.aurora i:nth-child(3) { left: 34%; bottom: -6%; background: radial-gradient(circle, rgba(255, 69, 36, 0.30), transparent 64%); animation: drift2 21s ease-in-out infinite alternate; }
+@keyframes drift1 { to { transform: translate(-14vw, 12vh) scale(1.25); } }
+@keyframes drift2 { to { transform: translate(12vw, -10vh) scale(0.85); } }
+
+/* hand-drawn doodles that draw themselves in */
+.doodles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.doodle { position: absolute; overflow: visible; }
+.doodle path {
+  fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: draw 0.9s var(--ease) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.d-aster  { width: clamp(34px, 4vw, 60px);  left: 6%;  top: 18%; animation: bob 5s ease-in-out infinite; }
+.d-aster path { stroke: var(--ink); animation-delay: 1.9s; }
+.d-spring { width: clamp(50px, 6vw, 90px);  right: 26%; top: 14%; }
+.d-spring path { animation-delay: 2.1s; }
+.d-star   { width: clamp(30px, 3.6vw, 56px); left: 38%; top: 30%; animation: bob 6s ease-in-out 1s infinite; }
+.d-star path { stroke: var(--red, #ff4524); stroke-width: 2.5; animation-delay: 2.3s; }
+.d-bolt   { width: clamp(26px, 3vw, 46px);  left: 12%; bottom: 34%; }
+.d-bolt path { stroke-width: 2.5; animation-delay: 2.5s; }
+.d-arrow  { width: clamp(60px, 8vw, 120px); right: 9%;  bottom: 26%; }
+.d-arrow path { animation-delay: 2.7s; }
+
+.hero-last-wrap { position: relative; display: inline-block; }
+.d-ellipse { position: absolute; inset: -10% -7%; width: 114%; height: 120%; }
+.d-ellipse path { stroke: var(--blue); stroke-width: 2.5; animation: draw 1.4s var(--ease) 2.4s forwards; }
+
+/* the smiley blinks */
+.face-svg g { animation: blink-eyes 4.6s infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes blink-eyes { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.08); } }
+
 .trail-zone { position: absolute; inset: 0; z-index: 1; }
 .trail-img {
   position: absolute; width: clamp(120px, 16vw, 220px); aspect-ratio: 4/5;
@@ -214,6 +251,43 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 .face-bg { fill: var(--yellow); stroke: var(--ink); stroke-width: 4; }
 .face-bg-lime { fill: var(--lime); stroke: var(--ink); stroke-width: 4; }
 @keyframes bob { 50% { transform: translateY(-8px) rotate(4deg); } }
+
+/* ============ HERO SCROLL STORY (the character journey) ============ */
+.story-stage { display: none; }
+.story-stage.live { display: block; }
+.story-scene video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.story-stage {
+  position: absolute; z-index: 2;
+  right: clamp(14px, 4vw, 70px);
+  bottom: clamp(150px, 24vh, 230px);
+  width: clamp(165px, 23vw, 340px);
+  aspect-ratio: 3 / 4;
+  pointer-events: none;
+  will-change: transform;
+}
+.story-scene {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  border: 3px solid var(--ink);
+  box-shadow: 10px 10px 0 rgba(20, 20, 20, 0.18);
+  background-color: #e7e1d3;
+  opacity: 0; transform: scale(0.92) rotate(3deg);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  will-change: transform, opacity;
+}
+.story-scene.on { opacity: 1; transform: scale(1) rotate(0deg); }
+.story-caption {
+  position: absolute; left: 50%; bottom: -46px;
+  transform: translateX(-50%) rotate(-1.5deg);
+  white-space: nowrap;
+  background: var(--ink); color: var(--lime);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 10px 16px;
+}
+@media (max-width: 860px) {
+  .story-stage { width: 36vw; bottom: 32vh; right: 10px; }
+  .story-caption { font-size: 8px; bottom: -38px; max-width: 60vw; white-space: normal; text-align: center; }
+}
 
 .hero-bottom {
   position: relative; z-index: 3;

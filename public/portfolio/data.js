@@ -175,6 +175,22 @@ window.PORTFOLIO = {
   ],
 
   /* ------------------------------------------------------------------
+     HERO STORY — a 4-scene character journey pinned to the first scroll.
+     Upload files named story-1, story-2, story-3, story-4 next to
+     index.html — each can be a VIDEO (.mp4 / .webm — e.g. your own
+     After Effects renders) or an image (.png/.jpg/.gif). The stage
+     stays completely hidden until at least one file exists.
+     Scene idea: at the desk → laptop on fire → working on a cloud →
+     free-falling (last scene reacts to scroll speed & direction).
+     ------------------------------------------------------------------ */
+  story: [
+    { media: "story-1", caption: "9 AM — designing things that convert" },
+    { media: "story-2", caption: "Deadline mode: laptop on fire" },
+    { media: "story-3", caption: "Head in the clouds — best ideas live up here" },
+    { media: "story-4", caption: "Free-falling into the next big idea" },
+  ],
+
+  /* ------------------------------------------------------------------
      SHOWREEL — the video section. Visitors click a title to load and
      play it on the big stage. For each item use ONE of:
        youtubeId:        "dQw4w9WgXcQ"  ← from youtube.com/watch?v=XXXX
