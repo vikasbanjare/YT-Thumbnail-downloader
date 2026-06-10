@@ -89,6 +89,16 @@
   fillMarquee($("#marquee-track-2"));
 
   /* ---------------- render: work cards ---------------- */
+  // covers load with a graceful fallback: cards start as bold gradient
+  // placeholders and upgrade to the image only once it actually loads
+  const loadedCovers = [];
+  function loadImg(url, ok) {
+    if (!url) return;
+    const im = new Image();
+    im.onload = () => ok(url);
+    im.src = url;
+  }
+
   const projects = DATA.projects || [];
   $("#work-count").textContent = String(projects.length).padStart(2, "0");
   const htrack = $("#htrack");
@@ -98,13 +108,26 @@
     card.dataset.index = i;
     card.dataset.cursor = "view";
     card.style.setProperty("--tilt", (i % 2 ? 1.6 : -1.8) + "deg");
-    const cover = p.cover
-      ? `<div class="hcard-cover" style="background-image:url('${p.cover}')"></div>`
-      : `<div class="hcard-cover ph-${i % 6}"><span class="ph-word">${p.category || p.title}</span><span class="ph-note">PASTE BEHANCE IMAGE IN data.js</span></div>`;
     card.innerHTML =
-      `<span class="hcard-num">${String(i + 1).padStart(2, "0")}</span>` + cover +
+      `<span class="hcard-num">${String(i + 1).padStart(2, "0")}</span>` +
+      `<div class="hcard-cover ph-${i % 6}"><span class="ph-word">${p.category || p.title}</span>` +
+      (p.cover ? "" : `<span class="ph-note">PASTE BEHANCE IMAGE IN data.js</span>`) +
+      `</div>` +
       `<div class="hcard-body"><h3 class="hcard-title">${p.title}</h3><span class="hcard-cat">${p.category || ""}</span></div>`;
     htrack.appendChild(card);
+    loadImg(p.cover, (url) => {
+      loadedCovers.push(url);
+      const c = $(".hcard-cover", card);
+      c.style.backgroundImage = `url('${url}')`;
+      c.classList.add("has-img");
+      // first two loaded covers float behind the hero title
+      if (loadedCovers.length <= 2) {
+        const peek = document.createElement("div");
+        peek.className = "hero-peek p" + loadedCovers.length;
+        peek.style.backgroundImage = `url('${url}')`;
+        $("#hero").appendChild(peek);
+      }
+    });
   });
   const endCard = document.createElement("a");
   endCard.className = "hcard-end";
@@ -253,9 +276,8 @@
       const zr = trailZone.getBoundingClientRect();
       const el = document.createElement("div");
       el.className = "trail-img";
-      const p = projects[ti % Math.max(projects.length, 1)];
-      if (p && p.cover) {
-        el.style.backgroundImage = `url('${p.cover}')`;
+      if (loadedCovers.length) {
+        el.style.backgroundImage = `url('${loadedCovers[ti % loadedCovers.length]}')`;
       } else {
         el.classList.add("ph-" + (ti % 6));
         el.innerHTML = `<span class="t-label">${trailWords[ti % trailWords.length]}</span>`;

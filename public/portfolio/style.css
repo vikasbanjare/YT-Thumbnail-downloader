@@ -145,6 +145,23 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
   color: var(--paper); text-transform: uppercase; text-align: center; padding: 8px;
 }
 
+.hcard-cover.has-img .ph-word, .hcard-cover.has-img .ph-note { display: none; }
+
+/* artwork peeking from behind the hero title */
+.hero-peek {
+  position: absolute; z-index: 1;
+  width: clamp(130px, 17vw, 250px); aspect-ratio: 4 / 3;
+  background-size: cover; background-position: center;
+  border: 3px solid var(--ink);
+  box-shadow: 10px 10px 0 rgba(20, 20, 20, 0.18);
+  animation: peekfloat 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-peek.p1 { top: 13%; right: 5%; rotate: 6deg; }
+.hero-peek.p2 { bottom: 26%; left: 2%; rotate: -5deg; animation-delay: 1.6s; }
+@keyframes peekfloat { 50% { translate: 0 -16px; } }
+@media (max-width: 860px) { .hero-peek.p2 { display: none; } .hero-peek.p1 { top: 9%; right: 3%; } }
+
 .hero-greeting {
   position: relative; z-index: 3;
   font-family: var(--serif); font-style: italic;

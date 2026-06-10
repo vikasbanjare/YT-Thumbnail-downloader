@@ -18,6 +18,10 @@
    or Vimeo (https://player.vimeo.com/video/VIDEO_ID) into `videoEmbed`.
 
    Fields left as "" are simply hidden — the site always looks finished.
+
+   NOTE: the current covers/images are AI-GENERATED PLACEHOLDERS so the
+   site looks alive on day one. Replace them with your real Behance
+   work — just swap the URLs below.
    ========================================================================== */
 
 window.PORTFOLIO = {
@@ -63,8 +67,8 @@ window.PORTFOLIO = {
       category: "Brand Identity",
       year: "2025",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",               // ← Behance image URL
-      images: [],              // ← more image URLs for the case view
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060401_b008b043-1072-426c-9bfd-8f2a2f32214c_min.webp",               // ← Behance image URL
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060401_b008b043-1072-426c-9bfd-8f2a2f32214c.png"],              // ← more image URLs for the case view
       videoEmbed: "",          // ← YouTube/Vimeo embed URL
       behanceProjectId: "",    // ← e.g. "123456789"
       link: "https://www.behance.net/vikas-banjare",
@@ -74,8 +78,8 @@ window.PORTFOLIO = {
       category: "Poster Series",
       year: "2025",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",
-      images: [],
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060536_8690ea62-7a39-4061-aa60-f71a4e19866e_min.webp",
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060536_8690ea62-7a39-4061-aa60-f71a4e19866e.png"],
       videoEmbed: "",
       behanceProjectId: "",
       link: "https://www.behance.net/vikas-banjare",
@@ -85,8 +89,8 @@ window.PORTFOLIO = {
       category: "UI / UX",
       year: "2024",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",
-      images: [],
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060538_ef9195dd-f90d-4eb0-a229-9e287ea6abe1_min.webp",
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060538_ef9195dd-f90d-4eb0-a229-9e287ea6abe1.png"],
       videoEmbed: "",
       behanceProjectId: "",
       link: "https://www.behance.net/vikas-banjare",
@@ -96,8 +100,8 @@ window.PORTFOLIO = {
       category: "Social Campaign",
       year: "2024",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",
-      images: [],
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060540_63d75952-6702-4beb-94e6-c5874631463d_min.webp",
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060540_63d75952-6702-4beb-94e6-c5874631463d.png"],
       videoEmbed: "",
       behanceProjectId: "",
       link: "https://www.behance.net/vikas-banjare",
@@ -107,8 +111,8 @@ window.PORTFOLIO = {
       category: "Motion Design",
       year: "2023",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",
-      images: [],
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060542_c6c91705-2d13-4fa9-a73d-00e9617e249a_min.webp",
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060542_c6c91705-2d13-4fa9-a73d-00e9617e249a.png"],
       videoEmbed: "",
       behanceProjectId: "",
       link: "https://www.behance.net/vikas-banjare",
@@ -118,8 +122,8 @@ window.PORTFOLIO = {
       category: "Illustration",
       year: "2023",
       description: "Replace me in data.js — paste this project's story from Behance.",
-      cover: "",
-      images: [],
+      cover: "https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060543_84758001-f4e1-4fd1-a84f-85a14a86dfa8_min.webp",
+      images: ["https://d8j0ntlcm91z4.cloudfront.net/user_39jjIRIKXNtWnmQrDfR7cEoNClb/hf_20260610_060543_84758001-f4e1-4fd1-a84f-85a14a86dfa8.png"],
       videoEmbed: "",
       behanceProjectId: "",
       link: "https://www.behance.net/vikas-banjare",
