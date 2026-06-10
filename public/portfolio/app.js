@@ -245,12 +245,18 @@
       return `<div class="reel-frame be"><iframe src="https://www.behance.net/embed/project/${item.behanceProjectId}?ilo0=1" title="${item.title}" allowfullscreen allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe></div>`;
     }
     function renderPoster() {
+      const item = reelItems[current];
       reelStage.innerHTML =
         `<div class="reel-poster" data-cursor="play">` +
+        `<span class="poster-bg"></span>` +
         `<span class="reel-play" aria-hidden="true">▶</span>` +
-        `<span class="reel-poster-title">${reelItems[current].title}</span>` +
+        `<span class="reel-poster-title">${item.title}</span>` +
         `<span class="reel-poster-hint">CLICK TO PLAY</span>` +
         `<span class="reel-scanlines" aria-hidden="true"></span></div>`;
+      loadImg(item.cover, (url) => {
+        const bg = $(".poster-bg", reelStage);
+        if (bg) bg.style.backgroundImage = `url('${url}')`;
+      });
     }
     function play() {
       playing = true;
@@ -734,6 +740,88 @@
       });
     }, { threshold: 0.5 });
     io.observe($(".about-stats"));
+  }
+
+  /* ---------------- career shorts (resume as phone stories) ---------------- */
+  const shorts = DATA.shorts || [];
+  const phone = $("#phone");
+  if (shorts.length && phone) {
+    const DUR = 5000;
+    const bars = $("#story-bars");
+    const view = $("#short-view");
+    const reactions = $("#reactions");
+    bars.innerHTML = shorts.map(() => "<i></i>").join("");
+    const barEls = $$("i", bars);
+    let cur = -1, timer = null;
+
+    const EMOJIS = ["❤️", "🔥", "👏", "✨", "💯", "🎉"];
+    function react(burst) {
+      if (reducedMotion) return;
+      const pr = phone.getBoundingClientRect();
+      const wr = reactions.parentElement.getBoundingClientRect();
+      for (let i = 0; i < (burst ? 5 : 1); i++) {
+        const r = document.createElement("span");
+        r.className = "reaction";
+        r.textContent = EMOJIS[(Math.random() * EMOJIS.length) | 0];
+        r.style.left = pr.right - wr.left + 6 + Math.random() * 20 + "px";
+        r.style.top = pr.bottom - wr.top - 80 + "px";
+        reactions.appendChild(r);
+        r.animate(
+          [
+            { transform: "translateY(0) scale(.6) rotate(0deg)", opacity: 0 },
+            { transform: `translateY(-${90 + Math.random() * 110}px) translateX(${(Math.random() - 0.3) * 60}px) scale(1.15) rotate(${(Math.random() - 0.5) * 40}deg)`, opacity: 1, offset: 0.55 },
+            { transform: `translateY(-${220 + Math.random() * 120}px) translateX(${(Math.random() - 0.3) * 90}px) scale(.8)`, opacity: 0 },
+          ],
+          { duration: 1500 + Math.random() * 700, easing: "ease-out", delay: i * 130 }
+        ).onfinish = () => r.remove();
+      }
+    }
+
+    function showShort(i) {
+      cur = ((i % shorts.length) + shorts.length) % shorts.length;
+      const s = shorts[cur];
+      phone.dataset.mood = cur % 4;
+      view.innerHTML =
+        `<div class="sv-emoji">${s.emoji}</div>` +
+        `<div class="sv-company">${s.company}</div>` +
+        `<span class="sv-role">${s.role}</span>` +
+        `<span class="sv-period">${s.period}</span>` +
+        `<ul class="sv-points">${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>`;
+      barEls.forEach((b, j) => {
+        b.classList.toggle("done", j < cur);
+        b.classList.remove("running");
+      });
+      void barEls[cur].offsetWidth;
+      barEls[cur].style.setProperty("--dur", DUR + "ms");
+      if (!reducedMotion) barEls[cur].classList.add("running");
+      react(true);
+      clearTimeout(timer);
+      if (!reducedMotion) timer = setTimeout(() => showShort(cur + 1), DUR);
+    }
+
+    $("#tap-right").addEventListener("click", () => showShort(cur + 1));
+    $("#tap-left").addEventListener("click", () => showShort(cur - 1));
+
+    // start the stories when the phone scrolls into view
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries, obs) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          obs.disconnect();
+          showShort(0);
+        }
+      }, { threshold: 0.4 });
+      io.observe(phone);
+    } else {
+      showShort(0);
+    }
+
+    // ambient reactions while the section is on screen
+    if (!reducedMotion) {
+      setInterval(() => {
+        const r = phone.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0 && cur >= 0) react(false);
+      }, 1600);
+    }
   }
 
   /* ---------------- toolbox flashlight wall ---------------- */
