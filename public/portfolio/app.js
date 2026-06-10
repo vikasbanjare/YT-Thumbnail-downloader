@@ -52,28 +52,31 @@
     $("#footer-greeting").textContent = `DEAR ${guest.toUpperCase()}, GOT A PROJECT IN MIND?`;
   }
 
-  // roles ticker
+  // roles — scramble/decode effect
+  function scramble(el, text, dur = 650) {
+    const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@/*";
+    const t0 = performance.now();
+    (function frame() {
+      const p = Math.min(1, (performance.now() - t0) / dur);
+      const upto = Math.floor(p * text.length);
+      el.textContent =
+        text.slice(0, upto) +
+        [...text.slice(upto)].map((c) => (c === " " ? " " : glyphs[(Math.random() * glyphs.length) | 0])).join("");
+      if (p < 1) requestAnimationFrame(frame);
+    })();
+  }
+
   const roles = DATA.roles || [];
   const rolesTrack = $("#hero-roles-track");
-  [...roles, roles[0]].filter(Boolean).forEach((r) => {
-    const s = document.createElement("span");
-    s.textContent = r;
-    rolesTrack.appendChild(s);
-  });
+  const roleEl = document.createElement("span");
+  roleEl.textContent = roles[0] || "";
+  rolesTrack.appendChild(roleEl);
   if (roles.length > 1 && !reducedMotion) {
-    let i = 0;
+    let ri = 0;
     setInterval(() => {
-      i += 1;
-      rolesTrack.style.transition = "transform .6s cubic-bezier(.65,0,.15,1)";
-      rolesTrack.style.transform = `translateY(-${i * 1.5}em)`;
-      if (i === roles.length) {
-        setTimeout(() => {
-          rolesTrack.style.transition = "none";
-          rolesTrack.style.transform = "translateY(0)";
-          i = 0;
-        }, 620);
-      }
-    }, 2400);
+      ri = (ri + 1) % roles.length;
+      scramble(roleEl, roles[ri]);
+    }, 2600);
   }
 
   /* ---------------- render: marquees ---------------- */
@@ -452,6 +455,200 @@
   });
   $("#case-close").addEventListener("click", closeCase);
   window.addEventListener("keydown", (e) => { if (e.key === "Escape" && !caseEl.hidden) closeCase(); });
+
+  /* ---------------- scroll progress bar ---------------- */
+  const progress = $("#progress");
+  window.addEventListener("scroll", () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+  }, { passive: true });
+
+  /* ---------------- 3D tilt on work cards ---------------- */
+  if (fine && !reducedMotion) {
+    htrack.addEventListener("mousemove", (e) => {
+      const card = e.target.closest(".hcard");
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const rx = ((e.clientY - r.top) / r.height - 0.5) * -8;
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 10;
+      card.style.transition = "transform .08s linear";
+      card.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-6px)`;
+    }, { passive: true });
+    htrack.addEventListener("mouseout", (e) => {
+      const card = e.target.closest(".hcard");
+      if (card && !card.contains(e.relatedTarget)) {
+        card.style.transition = "";
+        card.style.transform = "";
+      }
+    });
+  }
+
+  /* ---------------- stats count up ---------------- */
+  const statEls = $$(".about-stat .v");
+  if (statEls.length && "IntersectionObserver" in window && !reducedMotion) {
+    const io = new IntersectionObserver((entries, obs) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      obs.disconnect();
+      statEls.forEach((el) => {
+        const m = el.textContent.trim().match(/^([\d.]+)(M|K)?(\+)?$/);
+        if (!m) return;
+        const target = parseFloat(m[1]) * (m[2] === "M" ? 1e6 : m[2] === "K" ? 1e3 : 1);
+        const plus = m[3] || "";
+        const t0 = performance.now();
+        (function tick() {
+          const p = Math.min(1, (performance.now() - t0) / 1300);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const cur = target * eased;
+          el.textContent =
+            (cur >= 1e6 ? (Math.round(cur / 1e5) / 10).toFixed(cur < target ? 1 : 0) + "M"
+             : cur >= 1e3 && target >= 1e3 && m[2] ? Math.round(cur / 1e3) + "K"
+             : Math.round(cur)) + (p === 1 ? plus : "");
+          if (p < 1) requestAnimationFrame(tick);
+        })();
+      });
+    }, { threshold: 0.5 });
+    io.observe($(".about-stats"));
+  }
+
+  /* ---------------- toolbox flashlight wall ---------------- */
+  const wall = $("#toolbox-wall");
+  if (wall) {
+    const tools = DATA.toolbox || [];
+    const html = tools.map((t) => `<span>${t}</span>`).join("");
+    $("#tb-dim").innerHTML = html;
+    $("#tb-lit").innerHTML = html;
+    const lit = $("#tb-lit");
+    let roaming = true;
+    function setLight(x, y) {
+      lit.style.setProperty("--mx", x + "px");
+      lit.style.setProperty("--my", y + "px");
+    }
+    wall.addEventListener("pointermove", (e) => {
+      roaming = false;
+      const r = wall.getBoundingClientRect();
+      setLight(e.clientX - r.left, e.clientY - r.top);
+    });
+    // auto-roaming light until the visitor takes over (and always on touch)
+    (function roam(t) {
+      if (roaming) {
+        const w = wall.clientWidth, h = wall.clientHeight;
+        setLight(w / 2 + Math.cos(t / 1700) * w * 0.38, h / 2 + Math.sin(t / 1100) * h * 0.42);
+      }
+      requestAnimationFrame(roam);
+    })(0);
+  }
+
+  /* ---------------- throwable hero chips (grab & yeet) ---------------- */
+  const hero = $("#hero");
+  if (!reducedMotion) {
+    $$(".hero-chips .chip").forEach((chip) => {
+      let raf = null, px = 0, py = 0, vx = 0, vy = 0, lastT = 0, lastX = 0, lastY = 0, grabX = 0, grabY = 0;
+
+      function physics(t) {
+        const dt = Math.min(0.04, (t - lastT) / 1000) || 0.016;
+        lastT = t;
+        const hr = hero.getBoundingClientRect();
+        const maxX = hr.width - chip.offsetWidth - 4;
+        const maxY = hr.height - chip.offsetHeight - 6;
+        vy += 2400 * dt;
+        px += vx * dt;
+        py += vy * dt;
+        if (py >= maxY) { py = maxY; vy *= -0.55; vx *= 0.82; }
+        if (px <= 4) { px = 4; vx *= -0.7; }
+        if (px >= maxX) { px = maxX; vx *= -0.7; }
+        chip.style.left = px + "px";
+        chip.style.top = py + "px";
+        chip.style.transform = `rotate(${(vx * 0.01).toFixed(1)}deg)`;
+        if (py >= maxY - 0.5 && Math.abs(vy) < 40 && Math.abs(vx) < 12) return; // settled
+        raf = requestAnimationFrame(physics);
+      }
+
+      chip.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        cancelAnimationFrame(raf);
+        const hr = hero.getBoundingClientRect();
+        const cr = chip.getBoundingClientRect();
+        if (!chip.classList.contains("thrown")) {
+          chip.classList.add("thrown");
+          hero.appendChild(chip);
+        }
+        px = cr.left - hr.left; py = cr.top - hr.top;
+        grabX = e.clientX - cr.left; grabY = e.clientY - cr.top;
+        chip.style.left = px + "px"; chip.style.top = py + "px";
+        lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+        vx = 0; vy = 0;
+        chip.setPointerCapture(e.pointerId);
+
+        function move(ev) {
+          const now = performance.now();
+          const dt = Math.max(1, now - lastT);
+          vx = ((ev.clientX - lastX) / dt) * 1000;
+          vy = ((ev.clientY - lastY) / dt) * 1000;
+          lastX = ev.clientX; lastY = ev.clientY; lastT = now;
+          const hr2 = hero.getBoundingClientRect();
+          px = ev.clientX - hr2.left - grabX;
+          py = ev.clientY - hr2.top - grabY;
+          chip.style.left = px + "px";
+          chip.style.top = py + "px";
+        }
+        function up() {
+          chip.removeEventListener("pointermove", move);
+          chip.removeEventListener("pointerup", up);
+          chip.removeEventListener("pointercancel", up);
+          lastT = performance.now();
+          raf = requestAnimationFrame(physics);
+        }
+        chip.addEventListener("pointermove", move);
+        chip.addEventListener("pointerup", up);
+        chip.addEventListener("pointercancel", up);
+      });
+    });
+  }
+
+  /* ---------------- click confetti ---------------- */
+  if (!reducedMotion) {
+    const palette = () => [getComputedStyle(document.documentElement).getPropertyValue("--lime").trim(), "#ff4524", "#2c39e8", "#f2ede4"];
+    document.addEventListener("click", (e) => {
+      const colors = palette();
+      for (let i = 0; i < 6; i++) {
+        const c = document.createElement("span");
+        c.className = "confetti";
+        c.style.left = e.clientX + "px";
+        c.style.top = e.clientY + "px";
+        c.style.background = colors[i % colors.length];
+        document.body.appendChild(c);
+        const a = Math.random() * Math.PI * 2;
+        const d = 40 + Math.random() * 70;
+        c.animate(
+          [
+            { transform: "translate(-50%,-50%) scale(1) rotate(0deg)", opacity: 1 },
+            { transform: `translate(calc(-50% + ${(Math.cos(a) * d).toFixed(0)}px), calc(-50% + ${(Math.sin(a) * d + 26).toFixed(0)}px)) scale(.3) rotate(${(Math.random() * 240 - 120).toFixed(0)}deg)`, opacity: 0 },
+          ],
+          { duration: 550 + Math.random() * 250, easing: "cubic-bezier(.2,.6,.3,1)" }
+        ).onfinish = () => c.remove();
+      }
+    });
+  }
+
+  /* ---------------- accent theme switcher ---------------- */
+  const THEMES = [
+    { name: "LIME", color: "#d9ff3d" },
+    { name: "CYAN", color: "#5fe8ff" },
+    { name: "PINK", color: "#ff9dd6" },
+    { name: "TANGERINE", color: "#ffb13d" },
+  ];
+  let themeIdx = Math.max(0, THEMES.findIndex((t) => t.name === localStorage.getItem("vb-theme")));
+  function applyTheme(announce) {
+    const t = THEMES[themeIdx];
+    document.documentElement.style.setProperty("--lime", t.color);
+    localStorage.setItem("vb-theme", t.name);
+    if (announce) showToast("🎨 ACCENT: " + t.name);
+  }
+  applyTheme(false);
+  $("#theme-btn").addEventListener("click", () => {
+    themeIdx = (themeIdx + 1) % THEMES.length;
+    applyTheme(true);
+  });
 
   /* ---------------- toast + konami party mode ---------------- */
   const toast = $("#toast");

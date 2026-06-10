@@ -174,6 +174,14 @@ window.PORTFOLIO = {
     },
   ],
 
+  // The flashlight TOOLBOX wall — your real stack (move the light to reveal)
+  toolbox: [
+    "Premiere Pro", "After Effects", "Photoshop", "Illustrator", "Lightroom",
+    "DaVinci Resolve", "Final Cut Pro", "Figma", "Canva", "OBS Studio",
+    "YouTube Studio", "Meta Business", "Notion", "Runway ML", "MidJourney",
+    "HeyGen", "ChatGPT", "Veed.io", "ElevenLabs", "Trello",
+  ],
+
   // Services accordion (straight from the resume)
   services: [
     {

@@ -549,6 +549,56 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 .case-link:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 var(--ink); }
 .case-link:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 
+/* ============ SCROLL PROGRESS ============ */
+#progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 4px; z-index: 310;
+  background: var(--lime);
+  transform: scaleX(0); transform-origin: left;
+}
+
+/* ============ THEME SWITCHER ============ */
+.theme-btn {
+  background: none; border: 2px solid currentColor; border-radius: 50%;
+  width: 30px; height: 30px; cursor: pointer; padding: 0;
+  display: grid; place-items: center;
+}
+.theme-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--lime); display: block; }
+
+/* ============ THROWABLE CHIPS ============ */
+.hero-chips .chip { cursor: grab; user-select: none; touch-action: none; }
+.hero-chips .chip:active { cursor: grabbing; }
+.chip.thrown { position: absolute; z-index: 4; margin: 0; }
+
+/* ============ TOOLBOX (flashlight wall) ============ */
+.toolbox {
+  background: #0b0b13; color: var(--paper);
+  padding: clamp(80px, 14vh, 150px) var(--pad);
+  border-top: 3px solid var(--ink);
+}
+.toolbox-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(30px, 6vh, 60px); }
+.toolbox .mega em { color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
+.toolbox-wall { position: relative; cursor: none; }
+.tb-layer { display: flex; flex-wrap: wrap; gap: clamp(10px, 1.6vw, 22px) clamp(14px, 2.4vw, 30px); }
+.tb-layer span {
+  font-family: var(--display);
+  font-size: clamp(24px, 4.2vw, 58px);
+  text-transform: uppercase; line-height: 1.05;
+  white-space: nowrap;
+}
+.tb-dim span { color: transparent; -webkit-text-stroke: 1px rgba(242, 237, 228, 0.13); }
+.tb-lit {
+  position: absolute; inset: 0;
+  -webkit-mask-image: radial-gradient(circle 190px at var(--mx, 50%) var(--my, 50%), #000 0 35%, transparent 78%);
+          mask-image: radial-gradient(circle 190px at var(--mx, 50%) var(--my, 50%), #000 0 35%, transparent 78%);
+}
+.tb-lit span { color: var(--lime); text-shadow: 0 0 28px color-mix(in srgb, var(--lime) 55%, transparent); }
+
+/* ============ CLICK CONFETTI ============ */
+.confetti {
+  position: fixed; z-index: 320; width: 9px; height: 9px;
+  pointer-events: none; border-radius: 2px;
+}
+
 /* ============ TOAST ============ */
 #toast {
   position: fixed; top: 76px; left: 50%; transform: translate(-50%, -16px);
