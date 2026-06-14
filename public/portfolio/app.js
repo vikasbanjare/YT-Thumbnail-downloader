@@ -39,7 +39,6 @@
   $("#hero-last").textContent = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
   $("#chip-tagline").textContent = (P.tagline || "Visual Designer").toUpperCase();
   $("#chip-location").textContent = (P.location || "Earth").toUpperCase();
-  $("#chip-year").textContent = new Date().getFullYear();
 
   // personalized greeting — share links like  yoursite.com/?for=Nike
   const params = new URLSearchParams(location.search);
@@ -132,13 +131,6 @@
       const c = $(".hcard-cover", card);
       c.style.backgroundImage = `url('${url}')`;
       c.classList.add("has-img");
-      // first two loaded covers float behind the hero title
-      if (loadedCovers.length <= 2) {
-        const peek = document.createElement("div");
-        peek.className = "hero-peek p" + loadedCovers.length;
-        peek.style.backgroundImage = `url('${url}')`;
-        $("#hero").appendChild(peek);
-      }
     });
   });
   const endCard = document.createElement("a");
@@ -911,7 +903,8 @@
 
   /* ---------------- click confetti ---------------- */
   if (!reducedMotion) {
-    const palette = () => [getComputedStyle(document.documentElement).getPropertyValue("--lime").trim(), "#ff4524", "#2c39e8", "#f2ede4"];
+    const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const palette = () => [cssVar("--lime"), cssVar("--red"), cssVar("--blue"), "#f2ede4"];
     document.addEventListener("click", (e) => {
       const colors = palette();
       for (let i = 0; i < 6; i++) {
@@ -934,22 +927,37 @@
     });
   }
 
-  /* ---------------- accent theme switcher ---------------- */
+  /* ---------------- global colour-theme switcher ----------------
+     Each theme recolours the WHOLE palette — the accent plus every
+     section block (work / career / services) — so one tap visibly
+     transforms the entire site, not just small highlights.
+     Readability contract: --lime & --yellow stay bright (ink text
+     sits on them), --blue & --red stay deep (paper text sits on them).
+  -------------------------------------------------------------------- */
   const THEMES = [
-    { name: "LIME", color: "#d9ff3d" },
-    { name: "CYAN", color: "#5fe8ff" },
-    { name: "PINK", color: "#ff9dd6" },
-    { name: "TANGERINE", color: "#ffb13d" },
+    { name: "ELECTRIC", lime: "#d9ff3d", blue: "#2c39e8", red: "#ff4524", yellow: "#ffce32" },
+    { name: "CANDY",    lime: "#ff8fcf", blue: "#6b3df5", red: "#d6248c", yellow: "#ffd23f" },
+    { name: "OCEAN",    lime: "#3fe7c4", blue: "#1538a8", red: "#0f7d8c", yellow: "#ffe06a" },
+    { name: "EMBER",    lime: "#ffae3a", blue: "#3b2f8f", red: "#c2381f", yellow: "#ffd98a" },
   ];
+  const themeDot = $(".theme-dot");
+  const themeName = $("#theme-name");
   let themeIdx = Math.max(0, THEMES.findIndex((t) => t.name === localStorage.getItem("vb-theme")));
   function applyTheme(announce) {
     const t = THEMES[themeIdx];
-    document.documentElement.style.setProperty("--lime", t.color);
+    const root = document.documentElement.style;
+    root.setProperty("--lime", t.lime);
+    root.setProperty("--blue", t.blue);
+    root.setProperty("--red", t.red);
+    root.setProperty("--yellow", t.yellow);
+    if (themeDot) themeDot.style.background = t.lime;
+    if (themeName) themeName.textContent = t.name;
     localStorage.setItem("vb-theme", t.name);
-    if (announce) showToast("🎨 ACCENT: " + t.name);
+    if (announce) showToast("🎨 THEME — " + t.name);
   }
   applyTheme(false);
-  $("#theme-btn").addEventListener("click", () => {
+  const themeBtn = $("#theme-btn");
+  if (themeBtn) themeBtn.addEventListener("click", () => {
     themeIdx = (themeIdx + 1) % THEMES.length;
     applyTheme(true);
   });

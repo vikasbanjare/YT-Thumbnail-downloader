@@ -126,66 +126,35 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
   padding: calc(var(--pad) * 2) var(--pad) var(--pad);
   overflow: hidden;
 }
-/* aurora gradient that drifts toward the cursor */
-.aurora { position: absolute; inset: -12%; z-index: 0; pointer-events: none; filter: blur(75px); opacity: 0.6; }
-.aurora i { position: absolute; width: 44vw; aspect-ratio: 1; border-radius: 50%; will-change: transform; }
-.aurora i:nth-child(1) { left: 8%; top: 12%; background: radial-gradient(circle, color-mix(in srgb, var(--lime) 70%, transparent), transparent 64%); }
-.aurora i:nth-child(2) { right: 4%; top: 30%; background: radial-gradient(circle, rgba(44, 57, 232, 0.32), transparent 64%); animation: drift1 17s ease-in-out infinite alternate; }
-.aurora i:nth-child(3) { left: 34%; bottom: -6%; background: radial-gradient(circle, rgba(255, 69, 36, 0.30), transparent 64%); animation: drift2 21s ease-in-out infinite alternate; }
-@keyframes drift1 { to { transform: translate(-14vw, 12vh) scale(1.25); } }
-@keyframes drift2 { to { transform: translate(12vw, -10vh) scale(0.85); } }
-
-/* ============ FLYING TOOL ICONS (3D space) ============ */
-.fly-zone {
-  position: absolute; inset: 0; z-index: 1;
-  perspective: 1100px; pointer-events: none;
+/* one calm accent glow + a faint grid — restrained, premium */
+.hero-glow {
+  position: absolute; z-index: 0; pointer-events: none;
+  width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+  right: -12vw; top: -16vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--lime) 50%, transparent), transparent 60%);
+  filter: blur(95px); opacity: 0.4;
+  animation: glowpulse 9s ease-in-out infinite alternate;
 }
-.fly-scene { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
-.fly-icon {
-  position: absolute;
-  display: grid; place-items: center;
-  font-family: var(--body); font-weight: 700;
-  border-radius: 20%;
-  border: 2px solid rgba(10, 10, 10, 0.85);
-  box-shadow: 6px 9px 18px rgba(20, 20, 20, 0.22);
-  will-change: transform;
-  pointer-events: auto; cursor: pointer;
-  user-select: none;
-  transform-style: preserve-3d;
+@keyframes glowpulse { to { transform: translate(-4vw, 5vh) scale(1.12); opacity: 0.55; } }
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: clamp(60px, 8vw, 110px) clamp(60px, 8vw, 110px);
+  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000, transparent 78%);
+          mask-image: radial-gradient(circle at 50% 40%, #000, transparent 78%);
 }
-.fly-icon.kick { animation: iconkick 0.9s var(--ease); }
-@keyframes iconkick { 50% { scale: 1.35; } 100% { rotate: 720deg; } }
-@media (max-width: 860px) {
-  .fly-icon:nth-child(n+5) { display: none; }
-}
-
-/* hand-drawn doodles that draw themselves in */
-.doodles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.doodle { position: absolute; overflow: visible; }
-.doodle path {
-  fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 1; stroke-dashoffset: 1;
-  animation: draw 0.9s var(--ease) forwards;
-}
+:root { --line: rgba(20, 20, 20, 0.07); }
 @keyframes draw { to { stroke-dashoffset: 0; } }
-.d-aster  { width: clamp(34px, 4vw, 60px);  left: 6%;  top: 18%; animation: bob 5s ease-in-out infinite; }
-.d-aster path { stroke: var(--ink); animation-delay: 1.9s; }
-.d-spring { width: clamp(50px, 6vw, 90px);  right: 26%; top: 14%; }
-.d-spring path { animation-delay: 2.1s; }
-.d-star   { width: clamp(30px, 3.6vw, 56px); left: 38%; top: 30%; animation: bob 6s ease-in-out 1s infinite; }
-.d-star path { stroke: var(--red, #ff4524); stroke-width: 2.5; animation-delay: 2.3s; }
-.d-bolt   { width: clamp(26px, 3vw, 46px);  left: 12%; bottom: 34%; }
-.d-bolt path { stroke-width: 2.5; animation-delay: 2.5s; }
-.d-arrow  { width: clamp(60px, 8vw, 120px); right: 9%;  bottom: 26%; }
-.d-arrow path { animation-delay: 2.7s; }
 
 .hero-last-wrap { position: relative; display: inline-block; }
-.d-ellipse { position: absolute; inset: -10% -7%; width: 114%; height: 120%; }
-.d-ellipse path { stroke: var(--blue); stroke-width: 2.5; animation: draw 1.4s var(--ease) 2.4s forwards; }
-
-/* the smiley blinks */
-.face-svg g { animation: blink-eyes 4.6s infinite; transform-box: fill-box; transform-origin: center; }
-@keyframes blink-eyes { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.08); } }
+.d-ellipse { position: absolute; inset: -12% -8%; width: 116%; height: 124%; overflow: visible; }
+.d-ellipse path {
+  fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: draw 1.4s var(--ease) 2.2s forwards;
+}
 
 .trail-zone { position: absolute; inset: 0; z-index: 1; }
 .trail-img {
@@ -230,6 +199,22 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
   margin-bottom: 14px;
 }
 .hero-greeting mark { background: var(--lime); padding: 0 10px; }
+
+/* clean meta row above the name */
+.hero-top {
+  position: relative; z-index: 3;
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  margin-bottom: clamp(18px, 3.5vh, 36px);
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: clamp(11px, 1.2vw, 13px); font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--ink); border-radius: 40px;
+  padding: 9px 18px;
+}
+.hero-tag .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); animation: pulse 1.8s ease infinite; }
+.hero-tag-muted { border-color: var(--line); color: var(--ink-dim, #7a756c); }
 
 .hero-chips { position: relative; z-index: 3; display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: clamp(14px, 3vh, 30px); }
 .chip {
@@ -324,10 +309,11 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 .hero-desc { font-size: clamp(15px, 1.8vw, 21px); line-height: 1.45; font-weight: 500; }
 .hero-desc em { background: var(--lime); padding: 0 6px; font-size: 1.1em; }
 
-.hero-roles { height: 1.5em; overflow: hidden; font-size: clamp(13px, 1.5vw, 17px); font-weight: 700; letter-spacing: 0.16em; }
-.hero-roles-track { display: flex; flex-direction: column; }
-.hero-roles-track span { height: 1.5em; line-height: 1.5; }
-.hero-roles-track span::before { content: "→ "; }
+.hero-roles { display: flex; align-items: baseline; gap: 10px; font-size: clamp(12px, 1.4vw, 16px); font-weight: 700; letter-spacing: 0.16em; }
+.hero-roles-label { color: var(--ink-dim, #8a857c); white-space: nowrap; }
+.hero-roles-track span { color: var(--ink); }
+.hero-roles-track span::after { content: "_"; color: var(--lime); -webkit-text-fill-color: currentColor; animation: blinkcaret 1s steps(1) infinite; }
+@keyframes blinkcaret { 50% { opacity: 0; } }
 
 .badge-spin { position: relative; width: clamp(86px, 10vw, 130px); aspect-ratio: 1; display: grid; place-items: center; }
 .badge-spin svg { position: absolute; inset: 0; animation: spin 12s linear infinite; }
@@ -808,11 +794,17 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 
 /* ============ THEME SWITCHER ============ */
 .theme-btn {
-  background: none; border: 2px solid currentColor; border-radius: 50%;
-  width: 30px; height: 30px; cursor: pointer; padding: 0;
-  display: grid; place-items: center;
+  display: inline-flex; align-items: center; gap: 9px;
+  background: none; border: 1.5px solid currentColor; border-radius: 40px;
+  padding: 7px 14px 7px 11px; cursor: pointer;
+  font-family: var(--body); font-weight: 700; font-size: 11px; letter-spacing: 0.16em;
+  color: inherit;
+  transition: gap 0.3s var(--ease);
 }
-.theme-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--lime); display: block; }
+.theme-btn:hover { gap: 12px; }
+.theme-dot { width: 15px; height: 15px; border-radius: 50%; background: var(--lime); display: block; box-shadow: 0 0 0 3px color-mix(in srgb, var(--lime) 35%, transparent); }
+.theme-name { white-space: nowrap; }
+@media (max-width: 600px) { .theme-name { display: none; } .theme-btn { padding: 8px; } }
 
 /* ============ THROWABLE CHIPS ============ */
 .hero-chips .chip { cursor: grab; user-select: none; touch-action: none; }
