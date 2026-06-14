@@ -540,25 +540,69 @@
     });
   }
 
-  /* ---------------- pinned horizontal work gallery ---------------- */
+  /* ---------------- Selected Work: drag-scroll carousel ---------------- */
   const wrap = $("#htrack-wrap");
-  if (hasST && fine && !reducedMotion && window.innerWidth > 900) {
-    const amount = () => Math.max(0, htrack.scrollWidth - window.innerWidth + 80);
-    gsap.to(htrack, {
-      x: () => -amount(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#work",
-        start: "top top",
-        end: () => "+=" + amount(),
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
+  if (wrap) {
+    wrap.classList.add("drag"); // always horizontal-scroll; no fragile pinning
+    // wheel → horizontal
+    wrap.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        wrap.scrollLeft += e.deltaY;
+        if (wrap.scrollWidth - wrap.clientWidth - wrap.scrollLeft > 1 && wrap.scrollLeft > 1) e.preventDefault();
+      }
+    }, { passive: false });
+    // grab & drag with momentum
+    let down = false, startX = 0, startScroll = 0, vx = 0, lastX = 0, moved = false, mo = null;
+    wrap.addEventListener("pointerdown", (e) => {
+      down = true; moved = false; startX = lastX = e.clientX; startScroll = wrap.scrollLeft; vx = 0;
+      cancelAnimationFrame(mo); wrap.classList.add("grabbing"); wrap.setPointerCapture(e.pointerId);
     });
-  } else {
-    wrap.classList.add("native");
+    wrap.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - lastX; lastX = e.clientX; vx = dx;
+      if (Math.abs(e.clientX - startX) > 6) moved = true;
+      wrap.scrollLeft = startScroll - (e.clientX - startX);
+    });
+    function release() {
+      if (!down) return;
+      down = false; wrap.classList.remove("grabbing");
+      (function glide() { // momentum
+        if (Math.abs(vx) < 0.5) return;
+        wrap.scrollLeft -= vx; vx *= 0.92; mo = requestAnimationFrame(glide);
+      })();
+    }
+    wrap.addEventListener("pointerup", release);
+    wrap.addEventListener("pointercancel", release);
+    // suppress click-through right after a drag
+    htrack.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); } }, true);
+  }
+
+  /* ---------------- water ripple over the work images ---------------- */
+  const workSection = $("#work");
+  if (workSection && !reducedMotion) {
+    let lastRx = -999, lastRy = -999;
+    function ripple(x, y, big) {
+      const r = document.createElement("span");
+      r.className = "ripple" + (big ? " ripple-big" : "");
+      r.style.left = x + "px";
+      r.style.top = y + "px";
+      workSection.appendChild(r);
+      setTimeout(() => r.remove(), big ? 1100 : 820);
+    }
+    workSection.addEventListener("pointermove", (e) => {
+      const card = e.target.closest(".hcard-cover");
+      if (!card) return;
+      if (Math.hypot(e.clientX - lastRx, e.clientY - lastRy) < 64) return;
+      lastRx = e.clientX; lastRy = e.clientY;
+      const wr = workSection.getBoundingClientRect();
+      ripple(e.clientX - wr.left, e.clientY - wr.top, false);
+    }, { passive: true });
+    workSection.addEventListener("pointerdown", (e) => {
+      const card = e.target.closest(".hcard-cover");
+      if (!card) return;
+      const wr = workSection.getBoundingClientRect();
+      ripple(e.clientX - wr.left, e.clientY - wr.top, true);
+    });
   }
 
   /* ---------------- scroll reveals + manifesto highlight ---------------- */
@@ -878,12 +922,16 @@
       const s = shorts[cur];
       phone.dataset.mood = cur % 4;
       if (shTime) shTime.textContent = (shorts.length - cur) + "d";
+      const bgCovers = ["cover-website", "cover-wealthy", "cover-thumbnails", "cover-creative"];
       view.innerHTML =
+        `<div class="sv-bg"></div>` +
         `<div class="sv-emoji">${s.emoji}</div>` +
         `<div class="sv-company">${s.company}</div>` +
         `<span class="sv-role">${s.role}</span>` +
         `<span class="sv-period">${s.period}</span>` +
         `<ul class="sv-points">${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>`;
+      const bg = $(".sv-bg", view);
+      loadImg(bgCovers[cur % bgCovers.length], (url) => { if (bg) bg.style.backgroundImage = `url('${url}')`; });
       barEls.forEach((b, j) => {
         b.classList.toggle("done", j < cur);
         b.classList.remove("running");
