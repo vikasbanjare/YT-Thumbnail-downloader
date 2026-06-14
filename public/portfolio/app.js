@@ -386,39 +386,60 @@
     statsWrap.appendChild(d);
   });
 
-  /* ---------------- render: services ---------------- */
-  const servicesList = $("#services-list");
-  (DATA.services || []).forEach((s, i) => {
-    const item = document.createElement("div");
-    item.className = "service";
-    item.innerHTML =
-      `<button class="service-head" data-cursor="hover" aria-expanded="false">` +
-      `<span class="s-index">${String(i + 1).padStart(2, "0")}</span>` +
-      `<span class="s-title">${s.title}</span>` +
-      `<span class="s-plus">+</span></button>` +
-      `<div class="service-body"><div class="service-body-inner">` +
-      `<p class="service-desc">${s.description}</p>` +
-      `<div class="service-tags">${(s.tags || []).map((t) => `<span>${t}</span>`).join("")}</div>` +
-      `</div></div>`;
-    servicesList.appendChild(item);
-  });
-  servicesList.addEventListener("click", (e) => {
-    const head = e.target.closest(".service-head");
-    if (!head) return;
-    const item = head.parentElement;
-    const body = $(".service-body", item);
-    const wasOpen = item.classList.contains("open");
-    $$(".service.open", servicesList).forEach((o) => {
-      o.classList.remove("open");
-      $(".service-body", o).style.maxHeight = "0px";
-      $(".service-head", o).setAttribute("aria-expanded", "false");
+  /* ---------------- render: services (interactive, image-led) ---------------- */
+  const svcList = $("#svc-list");
+  const svcStage = $("#svc-stage");
+  if (svcList && svcStage) {
+    const services = DATA.services || [];
+    // each service -> a few related project covers (by base filename)
+    const svcWork = [
+      ["cover-podcast", "cover-trailer", "cover-ai-videos", "cover-wealthy", "cover-motion"],
+      ["cover-creative", "cover-social", "cover-thumbnails", "cover-emailer"],
+      ["cover-website", "cover-ai-website"],
+      ["cover-ai-videos", "cover-thumbnails", "cover-ai-website"],
+    ];
+    services.forEach((s, i) => {
+      const row = document.createElement("button");
+      row.className = "svc-row";
+      row.type = "button";
+      row.dataset.i = i;
+      row.dataset.cursor = "view";
+      row.innerHTML =
+        `<span class="svc-n">${String(i + 1).padStart(2, "0")}</span>` +
+        `<span class="svc-t">${s.title}</span>` +
+        `<span class="svc-tags">${(s.tags || []).slice(0, 3).join(" · ")}</span>` +
+        `<span class="svc-go">→</span>`;
+      svcList.appendChild(row);
     });
-    if (!wasOpen) {
-      item.classList.add("open");
-      body.style.maxHeight = body.scrollHeight + "px";
-      head.setAttribute("aria-expanded", "true");
+
+    let svcCur = -1;
+    function showSvc(i) {
+      if (i === svcCur) return;
+      svcCur = i;
+      const s = services[i] || {};
+      const covers = svcWork[i] || [];
+      svcStage.innerHTML =
+        `<div class="svc-cards">` +
+        covers.map((c, j) => `<div class="svc-card" style="--d:${j}"><span class="svc-ph">${(s.tags || [])[j] || s.title}</span></div>`).join("") +
+        `</div>` +
+        `<div class="svc-meta"><p class="svc-desc">${s.description || ""}</p>` +
+        `<div class="svc-tagrow">${(s.tags || []).map((t) => `<span>${t}</span>`).join("")}</div></div>`;
+      $$(".svc-card", svcStage).forEach((el, j) => loadImg(covers[j], (url) => {
+        el.style.backgroundImage = `url('${url}')`;
+        el.classList.add("has-img");
+      }));
+      $$(".svc-row", svcList).forEach((r, k) => r.classList.toggle("active", k === i));
     }
-  });
+    svcList.addEventListener("pointerover", (e) => {
+      const r = e.target.closest(".svc-row");
+      if (r) showSvc(Number(r.dataset.i));
+    });
+    svcList.addEventListener("click", (e) => {
+      const r = e.target.closest(".svc-row");
+      if (r) { const w = $("#work"); if (w) (lenis ? lenis.scrollTo(w) : w.scrollIntoView()); }
+    });
+    showSvc(0);
+  }
 
   /* ---------------- render: footer ---------------- */
   $("#footer-email").href = "mailto:" + (P.email || "");
@@ -459,11 +480,9 @@
 
   function intro() {
     if (!hasGsap || reducedMotion) return;
-    gsap.from(".kinetic .k", { yPercent: 120, opacity: 0, duration: 0.9, ease: "back.out(1.6)", stagger: 0.06 });
-    gsap.from(".hero-row-2", { yPercent: 60, opacity: 0, duration: 1, ease: "power4.out", delay: 0.3 });
-    gsap.from(".hero-chips .chip", { y: 30, opacity: 0, duration: 0.6, ease: "back.out(2)", stagger: 0.09, delay: 0.25 });
-    gsap.from(".hero-bottom > *", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, delay: 0.5 });
-    gsap.from(".site-header", { y: -40, opacity: 0, duration: 0.7, delay: 0.6 });
+    gsap.from(".hero-center > *", { y: 36, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.12 });
+    gsap.from(".shard", { opacity: 0, duration: 1.4, ease: "power2.out", stagger: 0.04, delay: 0.2 });
+    gsap.from(".site-header", { y: -40, opacity: 0, duration: 0.7, delay: 0.5 });
   }
 
   /* ---------------- kinetic hero letters (repel from cursor) ----------- */
@@ -824,6 +843,9 @@
     const bars = $("#story-bars");
     const view = $("#short-view");
     const reactions = $("#reactions");
+    const shAva = $("#sh-ava");
+    const shTime = $("#sh-time");
+    if (shAva) loadImg(P.photo, (url) => { shAva.style.backgroundImage = `url('${url}')`; shAva.classList.add("has-img"); });
     bars.innerHTML = shorts.map(() => "<i></i>").join("");
     const barEls = $$("i", bars);
     let cur = -1, timer = null;
@@ -855,6 +877,7 @@
       cur = ((i % shorts.length) + shorts.length) % shorts.length;
       const s = shorts[cur];
       phone.dataset.mood = cur % 4;
+      if (shTime) shTime.textContent = (shorts.length - cur) + "d";
       view.innerHTML =
         `<div class="sv-emoji">${s.emoji}</div>` +
         `<div class="sv-company">${s.company}</div>` +
@@ -898,32 +921,37 @@
     }
   }
 
-  /* ---------------- toolbox flashlight wall ---------------- */
-  const wall = $("#toolbox-wall");
-  if (wall) {
-    const tools = DATA.toolbox || [];
-    const html = tools.map((t) => `<span>${t}</span>`).join("");
-    $("#tb-dim").innerHTML = html;
-    $("#tb-lit").innerHTML = html;
-    const lit = $("#tb-lit");
-    let roaming = true;
-    function setLight(x, y) {
-      lit.style.setProperty("--mx", x + "px");
-      lit.style.setProperty("--my", y + "px");
-    }
-    wall.addEventListener("pointermove", (e) => {
-      roaming = false;
-      const r = wall.getBoundingClientRect();
-      setLight(e.clientX - r.left, e.clientY - r.top);
+  /* ---------------- toolbox: proximity-glow tool cloud (fast) ---------------- */
+  const cloud = $("#tool-cloud");
+  if (cloud) {
+    const pills = (DATA.toolbox || []).map((t) => {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "tool-pill";
+      el.dataset.cursor = "hover";
+      el.textContent = t;
+      el.addEventListener("click", () => {
+        el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
+        showToast("🛠 " + t.toUpperCase());
+      });
+      cloud.appendChild(el);
+      return el;
     });
-    // auto-roaming light until the visitor takes over (and always on touch)
-    (function roam(t) {
-      if (roaming) {
-        const w = wall.clientWidth, h = wall.clientHeight;
-        setLight(w / 2 + Math.cos(t / 1700) * w * 0.38, h / 2 + Math.sin(t / 1100) * h * 0.42);
+    // glow/scale by distance to cursor — updated once per frame (no repaints of masks)
+    if (fine && !reducedMotion && pills.length) {
+      let tx = -9999, ty = -9999, raf = null;
+      function update() {
+        raf = null;
+        for (const el of pills) {
+          const r = el.getBoundingClientRect();
+          const d = Math.hypot(r.left + r.width / 2 - tx, r.top + r.height / 2 - ty);
+          el.style.setProperty("--k", Math.max(0, 1 - d / 240).toFixed(3));
+        }
       }
-      requestAnimationFrame(roam);
-    })(0);
+      const ping = () => { if (!raf) raf = requestAnimationFrame(update); };
+      cloud.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; ping(); }, { passive: true });
+      cloud.addEventListener("pointerleave", () => { tx = ty = -9999; ping(); });
+    }
   }
 
   /* ---------------- throwable hero chips (grab & yeet) ---------------- */
