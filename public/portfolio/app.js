@@ -577,7 +577,7 @@
     htrack.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); } }, true);
   }
 
-  /* ---------------- water ripple over the work images ---------------- */
+  /* ---------------- water ripple + liquid warp over the work images ---------------- */
   const workSection = $("#work");
   if (workSection && !reducedMotion) {
     let lastRx = -999, lastRy = -999;
@@ -592,7 +592,7 @@
     workSection.addEventListener("pointermove", (e) => {
       const card = e.target.closest(".hcard-cover");
       if (!card) return;
-      if (Math.hypot(e.clientX - lastRx, e.clientY - lastRy) < 64) return;
+      if (Math.hypot(e.clientX - lastRx, e.clientY - lastRy) < 60) return;
       lastRx = e.clientX; lastRy = e.clientY;
       const wr = workSection.getBoundingClientRect();
       ripple(e.clientX - wr.left, e.clientY - wr.top, false);
@@ -603,6 +603,32 @@
       const wr = workSection.getBoundingClientRect();
       ripple(e.clientX - wr.left, e.clientY - wr.top, true);
     });
+
+    // real liquid displacement on the hovered cover (one filtered image at a time)
+    const disp = $("#liquid-disp");
+    if (disp && fine) {
+      let scale = 0, target = 0, rafD = null, active = null;
+      function ramp() {
+        rafD = null;
+        scale += (target - scale) * 0.14;
+        disp.setAttribute("scale", scale.toFixed(2));
+        if (Math.abs(target - scale) > 0.3) rafD = requestAnimationFrame(ramp);
+        else { scale = target; disp.setAttribute("scale", scale); if (target === 0 && active) { active.classList.remove("liquid"); active = null; } }
+      }
+      workSection.addEventListener("pointerover", (e) => {
+        const cover = e.target.closest(".hcard-cover");
+        if (!cover || cover === active) return;
+        if (active) active.classList.remove("liquid");
+        active = cover; cover.classList.add("liquid");
+        target = 26; if (!rafD) rafD = requestAnimationFrame(ramp);
+      });
+      workSection.addEventListener("pointerout", (e) => {
+        const cover = e.target.closest(".hcard-cover");
+        if (cover && cover === active && !cover.contains(e.relatedTarget)) {
+          target = 0; if (!rafD) rafD = requestAnimationFrame(ramp);
+        }
+      });
+    }
   }
 
   /* ---------------- scroll reveals + manifesto highlight ---------------- */
@@ -894,6 +920,23 @@
     const barEls = $$("i", bars);
     let cur = -1, timer = null;
 
+    // editorial chapter nav beside the phone (click to jump, syncs with story)
+    const careerNav = $("#career-nav");
+    if (careerNav) {
+      shorts.forEach((s, i) => {
+        const li = document.createElement("li");
+        li.className = "cn-item";
+        li.dataset.i = i;
+        li.dataset.cursor = "hover";
+        li.innerHTML =
+          `<span class="cn-emoji">${s.emoji}</span>` +
+          `<span class="cn-text"><span class="cn-company">${s.company}</span>` +
+          `<span class="cn-role">${s.role} · ${s.period}</span></span>`;
+        li.addEventListener("click", () => showShort(i));
+        careerNav.appendChild(li);
+      });
+    }
+
     const EMOJIS = ["❤️", "🔥", "👏", "✨", "💯", "🎉"];
     function react(burst) {
       if (reducedMotion) return;
@@ -939,6 +982,7 @@
       void barEls[cur].offsetWidth;
       barEls[cur].style.setProperty("--dur", DUR + "ms");
       if (!reducedMotion) barEls[cur].classList.add("running");
+      $$(".cn-item", $("#career-nav")).forEach((el, k) => el.classList.toggle("active", k === cur));
       react(true);
       clearTimeout(timer);
       if (!reducedMotion) timer = setTimeout(() => showShort(cur + 1), DUR);

@@ -468,6 +468,10 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 .htrack-wrap.drag::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--lime) 60%, transparent); border-radius: 10px; }
 .htrack-wrap.drag::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); }
 
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+/* liquid water-warp on the hovered cover */
+.hcard-cover.liquid { filter: url(#liquid); }
+
 /* water ripple over the work covers */
 .work { isolation: isolate; }
 .ripple {
@@ -921,11 +925,40 @@ em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 4
 .hero-chips .chip:active { cursor: grabbing; }
 .chip.thrown { position: absolute; z-index: 4; margin: 0; }
 
-/* ============ CAREER SHORTS (phone stories) ============ */
-.career { background: var(--red); color: var(--paper); padding: clamp(80px, 14vh, 150px) var(--pad); border-top: 3px solid var(--ink); }
+/* ============ CAREER SHORTS (editorial + phone story) ============ */
+.career {
+  position: relative; color: var(--paper);
+  padding: clamp(80px, 14vh, 150px) var(--pad); border-top: 3px solid var(--ink);
+  background:
+    radial-gradient(120% 90% at 80% 10%, color-mix(in srgb, var(--red) 70%, #000) 0%, transparent 60%),
+    radial-gradient(100% 100% at 10% 100%, color-mix(in srgb, var(--red) 90%, #000), color-mix(in srgb, var(--red) 55%, #120608));
+}
 .career-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(36px, 7vh, 70px); }
 .career .mega em { color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
 .career .chip { background: var(--paper); color: var(--ink); }
+
+.career-stage {
+  display: grid; grid-template-columns: 1fr auto; gap: clamp(30px, 6vw, 90px);
+  align-items: center; max-width: 1150px; margin: 0 auto;
+}
+.career-nav { list-style: none; display: flex; flex-direction: column; gap: clamp(8px, 1.5vh, 16px); }
+.cn-item {
+  display: flex; align-items: center; gap: 16px; cursor: pointer;
+  padding: clamp(12px, 2vh, 20px) 16px; border-radius: 16px;
+  border: 1.5px solid rgba(242,237,228,0.16);
+  opacity: 0.6; transition: opacity 0.3s, background 0.3s, transform 0.4s var(--ease), border-color 0.3s;
+}
+.cn-item:hover { opacity: 0.9; transform: translateX(6px); }
+.cn-item.active { opacity: 1; background: rgba(0,0,0,0.28); border-color: var(--lime); transform: translateX(10px); }
+.cn-emoji { font-size: clamp(22px, 2.6vw, 32px); flex: none; }
+.cn-text { display: flex; flex-direction: column; gap: 3px; }
+.cn-company { font-family: var(--display); font-size: clamp(18px, 2.4vw, 30px); text-transform: uppercase; line-height: 1; }
+.cn-item.active .cn-company { color: var(--lime); }
+.cn-role { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+@media (max-width: 860px) {
+  .career-stage { grid-template-columns: 1fr; justify-items: center; }
+  .career-nav { width: 100%; max-width: 420px; order: 2; margin-top: 30px; }
+}
 
 .phone-wrap { position: relative; display: flex; justify-content: center; }
 .phone {
