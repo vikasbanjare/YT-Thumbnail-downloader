@@ -905,84 +905,82 @@
     io.observe($(".about-stats"));
   }
 
-  /* ---------------- experience: editorial reveal list ---------------- */
+  /* ---------------- experience: 3D monolith scroll-reveal ---------------- */
   const shorts = DATA.shorts || [];
-  const expList = $("#exp-list");
-  if (shorts.length && expList) {
+  const mono = $("#mono");
+  const monoScroll = $("#mono-scroll");
+  if (shorts.length && mono && monoScroll) {
     const bgCovers = ["cover-website", "cover-wealthy", "cover-thumbnails", "cover-creative"];
+    const N = shorts.length;            // faces around the prism
+    const STEP = 360 / N;               // degrees per face
+    const monoInfo = $("#mono-info");
+    const monoRail = $("#mono-rail");
+
+    // build the faces of the rotating slab
     shorts.forEach((s, i) => {
-      const li = document.createElement("li");
-      li.className = "exp-row";
-      li.dataset.i = i;
-      li.innerHTML =
-        `<button class="exp-head" data-cursor="hover" aria-expanded="false">` +
-        `<span class="exp-num">${String(i + 1).padStart(2, "0")}</span>` +
-        `<span class="exp-co">${s.company}</span>` +
-        `<span class="exp-meta"><span class="exp-role">${s.role}</span><span class="exp-year">${s.period}</span></span>` +
-        `<span class="exp-plus" aria-hidden="true">+</span>` +
-        `</button>` +
-        `<div class="exp-body"><div class="exp-body-in">` +
-        `<span class="exp-emoji">${s.emoji}</span>` +
-        `<ul>${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>` +
-        `</div></div>`;
-      expList.appendChild(li);
+      const face = document.createElement("div");
+      face.className = "mono-face";
+      face.style.transform = `rotateY(${i * STEP}deg) translateZ(var(--mono-depth))`;
+      face.innerHTML =
+        `<div class="mf-img"></div>` +
+        `<div class="mf-grad"></div>` +
+        `<span class="mf-num">${String(i + 1).padStart(2, "0")}</span>` +
+        `<span class="mf-co">${s.company}</span>` +
+        `<span class="mf-role">${s.role}</span>`;
+      mono.appendChild(face);
+      loadImg(bgCovers[i % bgCovers.length], (url) => { $(".mf-img", face).style.backgroundImage = `url('${url}')`; });
     });
 
-    // floating cover preview that follows the cursor over a row
-    const preview = $("#exp-preview");
-    const previewImg = $("#exp-preview-img");
-    let px = 0, py = 0, tx = 0, ty = 0, shown = false;
-    if (fine && !reducedMotion) {
-      window.addEventListener("mousemove", (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-      (function loop() {
-        px += (tx - px) * 0.14; py += (ty - py) * 0.14;
-        preview.style.transform = `translate(${px - 150}px, ${py - 110}px) rotate(${((tx - px)) * 0.06}deg)`;
-        requestAnimationFrame(loop);
-      })();
-      expList.addEventListener("pointerover", (e) => {
-        const row = e.target.closest(".exp-row");
-        if (!row) return;
-        const i = Number(row.dataset.i);
-        loadImg(bgCovers[i % bgCovers.length], (url) => { previewImg.style.backgroundImage = `url('${url}')`; });
-        shown = true; preview.classList.add("on");
-        $$(".exp-row", expList).forEach((r) => r.classList.toggle("dim", r !== row));
-      });
-      expList.addEventListener("pointerleave", () => {
-        shown = false; preview.classList.remove("on");
-        $$(".exp-row", expList).forEach((r) => r.classList.remove("dim"));
-      });
-    }
+    // progress rail
+    monoRail.innerHTML = shorts.map((s, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span></li>`).join("");
+    const railItems = $$("li", monoRail);
 
-    // click a row to expand its highlights (accordion)
-    expList.addEventListener("click", (e) => {
-      const head = e.target.closest(".exp-head");
-      if (!head) return;
-      const row = head.parentElement;
-      const body = $(".exp-body", row);
-      const open = row.classList.contains("open");
-      $$(".exp-row.open", expList).forEach((o) => {
-        o.classList.remove("open");
-        $(".exp-body", o).style.maxHeight = "0px";
-        $(".exp-head", o).setAttribute("aria-expanded", "false");
+    // info panel (crossfades on chapter change)
+    let active = -1;
+    function setActive(i) {
+      if (i === active) return;
+      active = i;
+      const s = shorts[i];
+      monoInfo.innerHTML =
+        `<span class="mi-step">${String(i + 1).padStart(2, "0")} <i>/ ${String(N).padStart(2, "0")}</i></span>` +
+        `<span class="mi-emoji">${s.emoji}</span>` +
+        `<h3 class="mi-company">${s.company}</h3>` +
+        `<span class="mi-role">${s.role}</span>` +
+        `<span class="mi-period">${s.period}</span>` +
+        `<ul class="mi-points">${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>`;
+      railItems.forEach((el, k) => el.classList.toggle("active", k === i));
+    }
+    setActive(0);
+
+    // scroll drives the rotation (sticky pin — robust, no library needed)
+    const LERP = reducedMotion ? 1 : 0.1;
+    let ry = 0, targetRy = 0;
+    function compute() {
+      const total = monoScroll.offsetHeight - window.innerHeight;
+      const scrolled = Math.min(Math.max(-monoScroll.getBoundingClientRect().top, 0), Math.max(total, 1));
+      const progress = total > 0 ? scrolled / total : 0;
+      targetRy = progress * (N - 1) * STEP;            // 0 .. (N-1)*STEP
+      setActive(Math.min(N - 1, Math.round(progress * (N - 1))));
+    }
+    function render(t) {
+      ry += (targetRy - ry) * LERP;
+      const idle = reducedMotion ? 0 : Math.sin(t / 1400) * 4;
+      mono.style.transform = `rotateX(-6deg) rotateY(${-(ry + idle).toFixed(2)}deg)`;
+      requestAnimationFrame(render);
+    }
+    window.addEventListener("scroll", compute, { passive: true });
+    window.addEventListener("resize", compute);
+    compute();
+    render(0);
+
+    // click a rail dot to jump to that chapter
+    railItems.forEach((el, i) => {
+      el.addEventListener("click", () => {
+        const total = monoScroll.offsetHeight - window.innerHeight;
+        const y = monoScroll.offsetTop + (i / (N - 1)) * total;
+        (lenis ? lenis.scrollTo(y) : window.scrollTo({ top: y, behavior: "smooth" }));
       });
-      if (!open) {
-        row.classList.add("open");
-        body.style.maxHeight = body.scrollHeight + "px";
-        head.setAttribute("aria-expanded", "true");
-      }
     });
-
-    // open the first row once the section scrolls in
-    if ("IntersectionObserver" in window && !reducedMotion) {
-      const io = new IntersectionObserver((entries, obs) => {
-        if (entries.some((en) => en.isIntersecting)) {
-          obs.disconnect();
-          const first = $(".exp-head", expList);
-          if (first) first.click();
-        }
-      }, { threshold: 0.3 });
-      io.observe(expList);
-    }
   }
 
   /* ---------------- toolbox: proximity-glow tool cloud (fast) ---------------- */
