@@ -34,11 +34,102 @@
   /* ---------------- render: hero ---------------- */
   const firstName = P.firstName || "VIKAS";
   const lastName = P.lastName || "Banjare";
-  const heroFirst = $("#hero-first");
-  heroFirst.innerHTML = firstName.split("").map((c) => `<span class="k">${c}</span>`).join("");
-  $("#hero-last").textContent = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
-  $("#chip-tagline").textContent = (P.tagline || "Visual Designer").toUpperCase();
-  $("#chip-location").textContent = (P.location || "Earth").toUpperCase();
+  const setText = (id, v) => { const el = $("#" + id); if (el) el.textContent = v; };
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  setText("name-first", cap(firstName));
+  setText("name-last", cap(lastName));
+  setText("chip-tagline", (P.tagline || "Visual Designer").toUpperCase());
+  setText("chip-location", (P.location || "Earth").toUpperCase());
+
+  /* ---------------- submerged 3D field of work ---------------- */
+  // Cards float at varied depths; the whole field orbits toward the cursor
+  // and dives as you scroll. Far cards are dimmer & blurred (depth of field).
+  let fillHeroCover = () => {};
+  (function buildField() {
+    const space = $("#space");
+    if (!space || reducedMotion) return;
+    // scattered 3D coordinates (x%, y%, z px, rotateY, rotateX)
+    const defs = [
+      { x: -34, y: -22, z: 80,   ry: 18,  rx: -6 },
+      { x: 30,  y: -28, z: -180, ry: -16, rx: 5 },
+      { x: -42, y: 16,  z: -340, ry: 22,  rx: 8 },
+      { x: 40,  y: 22,  z: 40,   ry: -20, rx: -8 },
+      { x: -10, y: -34, z: -520, ry: 8,   rx: 10 },
+      { x: 12,  y: 30,  z: -260, ry: -10, rx: -10 },
+      { x: -48, y: -4,  z: -120, ry: 26,  rx: 2 },
+      { x: 48,  y: -10, z: -420, ry: -24, rx: 6 },
+      { x: 0,   y: 34,  z: -600, ry: 0,   rx: -12 },
+      { x: -22, y: 38,  z: -80,  ry: 14,  rx: -6 },
+      { x: 24,  y: -40, z: -340, ry: -12, rx: 8 },
+      { x: -38, y: 30,  z: -460, ry: 20,  rx: 4 },
+    ];
+    const shards = defs.map((d) => {
+      const el = document.createElement("div");
+      el.className = "shard";
+      // depth → dimming + blur for the "submerged" look
+      const depth = (d.z + 600) / 800; // 0 (far) .. ~1 (near)
+      const dim = (0.45 + depth * 0.55).toFixed(2);
+      const blur = Math.max(0, (1 - depth) * 4).toFixed(1);
+      el.style.transform = `translate(-50%, -50%) translate3d(${d.x}vw, ${d.y}vh, ${d.z}px) rotateY(${d.ry}deg) rotateX(${d.rx}deg)`;
+      el.style.opacity = dim;
+      el.style.filter = `blur(${blur}px) saturate(0.9)`;
+      el.dataset.base = el.style.transform;
+      // gentle individual float
+      el.style.animation = `shardfloat ${(7 + Math.random() * 5).toFixed(1)}s ease-in-out ${(Math.random() * 4).toFixed(1)}s infinite alternate`;
+      space.appendChild(el);
+      return el;
+    });
+    // inject the float keyframe once
+    const kf = document.createElement("style");
+    kf.textContent = "@keyframes shardfloat { to { translate: 0 -16px; } }";
+    document.head.appendChild(kf);
+
+    const covers = [];
+    fillHeroCover = (url) => {
+      covers.push(url);
+      shards.forEach((s, i) => { s.style.backgroundImage = `url('${covers[i % covers.length]}')`; });
+    };
+
+    // parallax (mouse) + dive (scroll)
+    let tmx = 0, tmy = 0, mx = 0, my = 0, dive = 0;
+    if (fine) {
+      window.addEventListener("mousemove", (e) => {
+        tmx = (e.clientX / window.innerWidth - 0.5);
+        tmy = (e.clientY / window.innerHeight - 0.5);
+      }, { passive: true });
+    }
+    window.addEventListener("scroll", () => {
+      const h = window.innerHeight;
+      dive = Math.min(1, Math.max(0, window.scrollY / h));
+    }, { passive: true });
+    (function render() {
+      mx += (tmx - mx) * 0.06;
+      my += (tmy - my) * 0.06;
+      space.style.transform =
+        `translateZ(${(dive * 520).toFixed(0)}px) rotateY(${(mx * 20).toFixed(2)}deg) rotateX(${(-my * 14).toFixed(2)}deg)`;
+      space.parentElement.style.opacity = (1 - dive * 0.9).toFixed(2);
+      requestAnimationFrame(render);
+    })();
+  })();
+
+  /* ---------------- rising bubbles ---------------- */
+  (function bubbles() {
+    const wrap = $("#bubbles");
+    if (!wrap || reducedMotion) return;
+    const N = window.innerWidth < 640 ? 14 : 26;
+    for (let i = 0; i < N; i++) {
+      const b = document.createElement("span");
+      b.className = "bubble";
+      const size = 4 + Math.random() * 16;
+      b.style.width = b.style.height = size + "px";
+      b.style.left = (Math.random() * 100).toFixed(1) + "%";
+      b.style.setProperty("--drift", (Math.random() * 80 - 40).toFixed(0) + "px");
+      b.style.animationDuration = (9 + Math.random() * 12).toFixed(1) + "s";
+      b.style.animationDelay = (-Math.random() * 18).toFixed(1) + "s";
+      b.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
+      wrap.appendChild(b);
+    }
+  })();
 
   // personalized greeting — share links like  yoursite.com/?for=Nike
   const params = new URLSearchParams(location.search);
@@ -131,6 +222,7 @@
       const c = $(".hcard-cover", card);
       c.style.backgroundImage = `url('${url}')`;
       c.classList.add("has-img");
+      fillHeroCover(url); // feed the submerged 3D field
     });
   });
   const endCard = document.createElement("a");

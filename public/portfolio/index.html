@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23141414'/><text x='16' y='22' font-family='Arial Black' font-size='13' fill='%23D9FF3D' text-anchor='middle'>VB</text></svg>" />
 </head>
 <body>
@@ -43,36 +43,33 @@
 
   <main id="top">
 
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO — submerged 3D gallery ============ -->
     <section class="hero" id="hero">
-      <div class="hero-glow" aria-hidden="true"></div>
-      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="deep-bg" aria-hidden="true"></div>
+      <div class="caustics" aria-hidden="true"></div>
+      <div class="bubbles" id="bubbles" aria-hidden="true"></div>
 
-      <p class="hero-greeting" id="hero-greeting" hidden></p>
-
-      <div class="hero-top">
-        <span class="hero-tag"><i class="dot-live" aria-hidden="true"></i> <span id="chip-tagline">DESIGN STUDIO LEAD</span></span>
-        <span class="hero-tag hero-tag-muted"><span id="chip-location">MUMBAI</span> · <span id="chip-time">--:--</span></span>
+      <div class="space-wrap" aria-hidden="true">
+        <div class="space" id="space"></div>
       </div>
 
-      <h1 class="hero-title" aria-label="Vikas Banjare">
-        <span class="hero-row"><span class="kinetic" id="hero-first">VIKAS</span></span>
-        <span class="hero-row hero-row-2">
-          <span class="hero-last-wrap"><span class="hero-last serif-outline" id="hero-last">Banjare</span><svg class="d-ellipse" viewBox="0 0 320 140" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M160 12 C60 8 12 40 14 72 C16 110 110 132 190 126 C268 120 310 90 304 58 C298 26 220 4 150 10"/></svg></span>
-        </span>
-      </h1>
+      <div class="hero-fog" aria-hidden="true"></div>
 
-      <div class="hero-bottom">
-        <p class="hero-desc">I turn ideas into work that <em class="serif">moves</em>,<br/>converts and gets <em class="serif">remembered.</em></p>
-        <div class="hero-roles" aria-hidden="true"><span class="hero-roles-label">CURRENTLY —</span><div class="hero-roles-track" id="hero-roles-track"></div></div>
-        <a class="badge-spin" href="#work" data-cursor="hover" aria-label="Scroll to work">
-          <svg viewBox="0 0 120 120">
-            <defs><path id="circ" d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"/></defs>
-            <text class="badge-text"><textPath href="#circ">SELECTED WORK ✦ SCROLL DOWN ✦ </textPath></text>
-          </svg>
-          <span class="badge-arrow">↓</span>
-        </a>
+      <div class="hero-center">
+        <p class="hero-greeting" id="hero-greeting" hidden></p>
+        <p class="hero-kicker">
+          <span class="dot-live" aria-hidden="true"></span>
+          <span id="chip-tagline">DESIGN STUDIO LEAD</span> · <span id="chip-location">MUMBAI</span> · <span id="chip-time">--:--</span>
+        </p>
+        <h1 class="hero-name">
+          <span class="hn-first" id="name-first">Vikas</span>
+          <span class="hn-last" id="name-last">Banjare</span>
+        </h1>
+        <p class="hero-sub">I turn ideas into work that <em>moves</em>, converts<br/>&amp; gets <em>remembered</em> — <span id="hero-roles-track" class="hero-role"></span></p>
+        <a class="hero-enter magnetic" href="#work" data-cursor="hover">ENTER THE WORK <span class="he-arrow">↓</span></a>
       </div>
+
+      <p class="hero-hint" aria-hidden="true">move to explore · drag to orbit · scroll to dive</p>
     </section>
 
     <!-- ============ MARQUEE 1 ============ -->
@@ -229,7 +226,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-  <script src="data.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="data.js?v=14"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>
