@@ -905,111 +905,83 @@
     io.observe($(".about-stats"));
   }
 
-  /* ---------------- career shorts (resume as phone stories) ---------------- */
+  /* ---------------- experience: editorial reveal list ---------------- */
   const shorts = DATA.shorts || [];
-  const phone = $("#phone");
-  if (shorts.length && phone) {
-    const DUR = 5000;
-    const bars = $("#story-bars");
-    const view = $("#short-view");
-    const reactions = $("#reactions");
-    const shAva = $("#sh-ava");
-    const shTime = $("#sh-time");
-    if (shAva) loadImg(P.photo, (url) => { shAva.style.backgroundImage = `url('${url}')`; shAva.classList.add("has-img"); });
-    bars.innerHTML = shorts.map(() => "<i></i>").join("");
-    const barEls = $$("i", bars);
-    let cur = -1, timer = null;
+  const expList = $("#exp-list");
+  if (shorts.length && expList) {
+    const bgCovers = ["cover-website", "cover-wealthy", "cover-thumbnails", "cover-creative"];
+    shorts.forEach((s, i) => {
+      const li = document.createElement("li");
+      li.className = "exp-row";
+      li.dataset.i = i;
+      li.innerHTML =
+        `<button class="exp-head" data-cursor="hover" aria-expanded="false">` +
+        `<span class="exp-num">${String(i + 1).padStart(2, "0")}</span>` +
+        `<span class="exp-co">${s.company}</span>` +
+        `<span class="exp-meta"><span class="exp-role">${s.role}</span><span class="exp-year">${s.period}</span></span>` +
+        `<span class="exp-plus" aria-hidden="true">+</span>` +
+        `</button>` +
+        `<div class="exp-body"><div class="exp-body-in">` +
+        `<span class="exp-emoji">${s.emoji}</span>` +
+        `<ul>${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>` +
+        `</div></div>`;
+      expList.appendChild(li);
+    });
 
-    // editorial chapter nav beside the phone (click to jump, syncs with story)
-    const careerNav = $("#career-nav");
-    if (careerNav) {
-      shorts.forEach((s, i) => {
-        const li = document.createElement("li");
-        li.className = "cn-item";
-        li.dataset.i = i;
-        li.dataset.cursor = "hover";
-        li.innerHTML =
-          `<span class="cn-emoji">${s.emoji}</span>` +
-          `<span class="cn-text"><span class="cn-company">${s.company}</span>` +
-          `<span class="cn-role">${s.role} · ${s.period}</span></span>`;
-        li.addEventListener("click", () => showShort(i));
-        careerNav.appendChild(li);
+    // floating cover preview that follows the cursor over a row
+    const preview = $("#exp-preview");
+    const previewImg = $("#exp-preview-img");
+    let px = 0, py = 0, tx = 0, ty = 0, shown = false;
+    if (fine && !reducedMotion) {
+      window.addEventListener("mousemove", (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      (function loop() {
+        px += (tx - px) * 0.14; py += (ty - py) * 0.14;
+        preview.style.transform = `translate(${px - 150}px, ${py - 110}px) rotate(${((tx - px)) * 0.06}deg)`;
+        requestAnimationFrame(loop);
+      })();
+      expList.addEventListener("pointerover", (e) => {
+        const row = e.target.closest(".exp-row");
+        if (!row) return;
+        const i = Number(row.dataset.i);
+        loadImg(bgCovers[i % bgCovers.length], (url) => { previewImg.style.backgroundImage = `url('${url}')`; });
+        shown = true; preview.classList.add("on");
+        $$(".exp-row", expList).forEach((r) => r.classList.toggle("dim", r !== row));
+      });
+      expList.addEventListener("pointerleave", () => {
+        shown = false; preview.classList.remove("on");
+        $$(".exp-row", expList).forEach((r) => r.classList.remove("dim"));
       });
     }
 
-    const EMOJIS = ["❤️", "🔥", "👏", "✨", "💯", "🎉"];
-    function react(burst) {
-      if (reducedMotion) return;
-      const pr = phone.getBoundingClientRect();
-      const wr = reactions.parentElement.getBoundingClientRect();
-      for (let i = 0; i < (burst ? 5 : 1); i++) {
-        const r = document.createElement("span");
-        r.className = "reaction";
-        r.textContent = EMOJIS[(Math.random() * EMOJIS.length) | 0];
-        r.style.left = pr.right - wr.left + 6 + Math.random() * 20 + "px";
-        r.style.top = pr.bottom - wr.top - 80 + "px";
-        reactions.appendChild(r);
-        r.animate(
-          [
-            { transform: "translateY(0) scale(.6) rotate(0deg)", opacity: 0 },
-            { transform: `translateY(-${90 + Math.random() * 110}px) translateX(${(Math.random() - 0.3) * 60}px) scale(1.15) rotate(${(Math.random() - 0.5) * 40}deg)`, opacity: 1, offset: 0.55 },
-            { transform: `translateY(-${220 + Math.random() * 120}px) translateX(${(Math.random() - 0.3) * 90}px) scale(.8)`, opacity: 0 },
-          ],
-          { duration: 1500 + Math.random() * 700, easing: "ease-out", delay: i * 130 }
-        ).onfinish = () => r.remove();
+    // click a row to expand its highlights (accordion)
+    expList.addEventListener("click", (e) => {
+      const head = e.target.closest(".exp-head");
+      if (!head) return;
+      const row = head.parentElement;
+      const body = $(".exp-body", row);
+      const open = row.classList.contains("open");
+      $$(".exp-row.open", expList).forEach((o) => {
+        o.classList.remove("open");
+        $(".exp-body", o).style.maxHeight = "0px";
+        $(".exp-head", o).setAttribute("aria-expanded", "false");
+      });
+      if (!open) {
+        row.classList.add("open");
+        body.style.maxHeight = body.scrollHeight + "px";
+        head.setAttribute("aria-expanded", "true");
       }
-    }
+    });
 
-    function showShort(i) {
-      cur = ((i % shorts.length) + shorts.length) % shorts.length;
-      const s = shorts[cur];
-      phone.dataset.mood = cur % 4;
-      if (shTime) shTime.textContent = (shorts.length - cur) + "d";
-      const bgCovers = ["cover-website", "cover-wealthy", "cover-thumbnails", "cover-creative"];
-      view.innerHTML =
-        `<div class="sv-bg"></div>` +
-        `<div class="sv-emoji">${s.emoji}</div>` +
-        `<div class="sv-company">${s.company}</div>` +
-        `<span class="sv-role">${s.role}</span>` +
-        `<span class="sv-period">${s.period}</span>` +
-        `<ul class="sv-points">${(s.points || []).map((pt) => `<li>${pt}</li>`).join("")}</ul>`;
-      const bg = $(".sv-bg", view);
-      loadImg(bgCovers[cur % bgCovers.length], (url) => { if (bg) bg.style.backgroundImage = `url('${url}')`; });
-      barEls.forEach((b, j) => {
-        b.classList.toggle("done", j < cur);
-        b.classList.remove("running");
-      });
-      void barEls[cur].offsetWidth;
-      barEls[cur].style.setProperty("--dur", DUR + "ms");
-      if (!reducedMotion) barEls[cur].classList.add("running");
-      $$(".cn-item", $("#career-nav")).forEach((el, k) => el.classList.toggle("active", k === cur));
-      react(true);
-      clearTimeout(timer);
-      if (!reducedMotion) timer = setTimeout(() => showShort(cur + 1), DUR);
-    }
-
-    $("#tap-right").addEventListener("click", () => showShort(cur + 1));
-    $("#tap-left").addEventListener("click", () => showShort(cur - 1));
-
-    // start the stories when the phone scrolls into view
-    if ("IntersectionObserver" in window) {
+    // open the first row once the section scrolls in
+    if ("IntersectionObserver" in window && !reducedMotion) {
       const io = new IntersectionObserver((entries, obs) => {
-        if (entries.some((e) => e.isIntersecting)) {
+        if (entries.some((en) => en.isIntersecting)) {
           obs.disconnect();
-          showShort(0);
+          const first = $(".exp-head", expList);
+          if (first) first.click();
         }
-      }, { threshold: 0.4 });
-      io.observe(phone);
-    } else {
-      showShort(0);
-    }
-
-    // ambient reactions while the section is on screen
-    if (!reducedMotion) {
-      setInterval(() => {
-        const r = phone.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0 && cur >= 0) react(false);
-      }, 1600);
+      }, { threshold: 0.3 });
+      io.observe(expList);
     }
   }
 
