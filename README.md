@@ -1,5 +1,9 @@
 # YouTube Thumbnail Downloader
 
+> **Also in this repo:** an interactive portfolio site at [`public/portfolio/`](public/portfolio/) —
+> run `npm run dev` and open `http://127.0.0.1:4173/portfolio/`, or visit `/portfolio/` on the
+> deployed Vercel URL. Customize it by editing `public/portfolio/data.js`.
+
 A small local web tool for downloading YouTube video, playlist, or channel-page thumbnails as a ZIP.
 
 ## Run
